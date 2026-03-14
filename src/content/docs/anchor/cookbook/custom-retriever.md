@@ -52,19 +52,22 @@ from anchor import (
     retriever_step,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Deterministic embedding function
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 def embed_fn(text: str) -> list[float]:
     seed = sum(ord(c) for c in text) % 10000
     raw = [math.sin(seed * 1000 + i) for i in range(64)]
     norm = math.sqrt(sum(x * x for x in raw))
     return [x / norm for x in raw] if norm else raw
 
-
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. Custom retriever: keyword-based dictionary lookup
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 class KeywordDictRetriever:
     """A simple retriever that matches query keywords against a dictionary.
 
@@ -122,16 +125,19 @@ class KeywordDictRetriever:
 
         return results
 
-
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Verify it satisfies the protocol
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 my_retriever = KeywordDictRetriever()
 print(f"Is Retriever? {isinstance(my_retriever, Retriever)}")  # True
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Index sample documents
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 documents = [
     "Python is great for data science and machine learning.",
     "RAG combines retrieval with language model generation.",
@@ -149,9 +155,11 @@ items = [
 my_retriever.index(items)
 print(f"Indexed {len(items)} documents")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Use in a ContextPipeline
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Custom Retriever in Pipeline ===\n")
 
 pipeline = (
@@ -170,9 +178,11 @@ for item in result.window.items:
         print(f"  [{item.score:.2f}] ({method}, {matches} matches) "
               f"{item.content[:60]}...")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 6. Combine with DenseRetriever via HybridRetriever
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Hybrid: Custom + Dense ===\n")
 
 dense = DenseRetriever(
@@ -200,9 +210,11 @@ for item in hybrid_results:
     print(f"  [{item.score:.3f}] (rrf={rrf:.4f}, orig={method}) "
           f"{item.content[:60]}...")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 7. Custom retriever in a pipeline with the decorator API
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Decorator API with Custom Retriever ===\n")
 
 pipeline2 = ContextPipeline(max_tokens=2048)
@@ -253,21 +265,24 @@ class AsyncRetriever(Protocol):
 Use `async_retriever_step()` to add an async retriever to the pipeline,
 and call `pipeline.abuild()` instead of `pipeline.build()`.
 
-!!! tip "Protocol Compliance"
-    You can verify your class satisfies the protocol at runtime:
-    ```python
-    from anchor import Retriever
-    assert isinstance(my_retriever, Retriever)
-    ```
+:::tip[Protocol Compliance]
+You can verify your class satisfies the protocol at runtime:
+```python
+from anchor import Retriever
+assert isinstance(my_retriever, Retriever)
+```
+:::
 
-!!! note "No Inheritance Required"
-    Unlike abstract base classes, protocols use structural subtyping.
-    Your class does not need to inherit from `Retriever` -- it just
-    needs a `retrieve` method with the correct signature.
+:::note[No Inheritance Required]
+Unlike abstract base classes, protocols use structural subtyping.
+Your class does not need to inherit from `Retriever` -- it just
+needs a `retrieve` method with the correct signature.
+:::
 
-!!! warning "Return ContextItem Objects"
-    The `retrieve` method must return `list[ContextItem]`. The pipeline
-    expects these specific model objects, not plain dicts or strings.
+:::caution[Return ContextItem Objects]
+The `retrieve` method must return `list[ContextItem]`. The pipeline
+expects these specific model objects, not plain dicts or strings.
+:::
 
 ## Next Steps
 

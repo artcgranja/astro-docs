@@ -38,19 +38,22 @@ from anchor import (
     retriever_step,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Deterministic embedding function
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 def embed_fn(text: str) -> list[float]:
     seed = sum(ord(c) for c in text) % 10000
     raw = [math.sin(seed * 1000 + i) for i in range(64)]
     norm = math.sqrt(sum(x * x for x in raw))
     return [x / norm for x in raw] if norm else raw
 
-
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. Sample document (a technical article)
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 article = """
 # Context Engineering for AI
 
@@ -91,9 +94,11 @@ cases. Add reranking, hybrid retrieval, and query transformation
 only after measuring baseline performance with evaluation metrics.
 """
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Compare chunking strategies
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("=== Chunking Strategy Comparison ===\n")
 
 chunkers = {
@@ -113,9 +118,11 @@ for name, chunker in chunkers.items():
         print(f"    [{i}] ({tokens} tokens) {preview}...")
     print()
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Use MetadataEnricher for custom metadata
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("=== Metadata Enrichment ===\n")
 
 class TopicTagger(MetadataEnricher):
@@ -156,9 +163,11 @@ for item in items:
     preview = item.content[:50].replace("\n", " ")
     print(f"  [{pos}] topics={topics} | {preview}...")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Index chunks into a DenseRetriever
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Indexing into DenseRetriever ===\n")
 
 dense = DenseRetriever(
@@ -169,9 +178,11 @@ dense = DenseRetriever(
 count = dense.index(items)
 print(f"  Indexed {count} chunks")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 6. Query the indexed documents
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Querying Indexed Documents ===\n")
 
 pipeline = (
@@ -202,9 +213,11 @@ for q in queries:
               f"| {r.content[:50].replace(chr(10), ' ')}...")
     print()
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 7. Inspect chunk metadata
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("=== Chunk Metadata Details ===\n")
 sample = items[0]
 print(f"  id:          {sample.id}")
@@ -257,15 +270,17 @@ items = ingester.ingest_directory(
 )
 ```
 
-!!! tip "Chunk Size Guidelines"
-    - Small chunks (100-200 tokens): better precision, more chunks to search
-    - Large chunks (500-1000 tokens): more context per result, fewer chunks
-    - Start with 256-512 tokens and adjust based on evaluation metrics
+:::tip[Chunk Size Guidelines]
+- Small chunks (100-200 tokens): better precision, more chunks to search
+- Large chunks (500-1000 tokens): more context per result, fewer chunks
+- Start with 256-512 tokens and adjust based on evaluation metrics
+:::
 
-!!! warning "SemanticChunker Signature"
-    `SemanticChunker` requires a batch embedding function with signature
-    `(list[str]) -> list[list[float]]`, not the single-string `embed_fn`
-    used by `DenseRetriever`.
+:::caution[SemanticChunker Signature]
+`SemanticChunker` requires a batch embedding function with signature
+`(list[str]) -> list[list[float]]`, not the single-string `embed_fn`
+used by `DenseRetriever`.
+:::
 
 ## Next Steps
 

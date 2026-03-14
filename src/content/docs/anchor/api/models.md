@@ -42,9 +42,10 @@ class ContextItem(BaseModel):
 | `metadata` | `dict[str, Any]` | `{}` | Arbitrary key-value metadata. |
 | `created_at` | `datetime` | `datetime.now(UTC)` | Timestamp of creation. |
 
-!!! tip
-    Since `ContextItem` is frozen, use `item.model_copy(update={"score": 0.9})`
-    to create a modified copy.
+:::tip
+Since `ContextItem` is frozen, use `item.model_copy(update={"score": 0.9})`
+to create a modified copy.
+:::
 
 ### Example
 
@@ -122,9 +123,10 @@ Encapsulates a query as it flows through the pipeline.
 | `metadata` | `dict[str, Any]` | `{}` | Arbitrary query metadata (user ID, session ID, etc.). |
 | `chat_history` | `list[ConversationTurn]` | `[]` | Optional conversation history for context. |
 
-!!! tip
-    `ContextPipeline.build()` accepts a plain string and wraps it in a
-    `QueryBundle` automatically.
+:::tip
+`ContextPipeline.build()` accepts a plain string and wraps it in a
+`QueryBundle` automatically.
+:::
 
 ---
 
@@ -249,9 +251,10 @@ from anchor.llm import Role
 | `Role.ASSISTANT` | `"assistant"` | Assistant responses. |
 | `Role.TOOL` | `"tool"` | Tool call results. |
 
-!!! tip
-    Since `Role` is a `StrEnum`, `str(Role.USER)` returns `"user"` and
-    `Role.USER == "user"` is `True`.
+:::tip
+Since `Role` is a `StrEnum`, `str(Role.USER)` returns `"user"` and
+`Role.USER == "user"` is `True`.
+:::
 
 ### `MemoryType`
 

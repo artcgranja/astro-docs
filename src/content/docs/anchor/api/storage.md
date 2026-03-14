@@ -146,9 +146,10 @@ Implements `VectorStore`. Thread-safe via `threading.Lock`.
 | `search` | `(query_embedding: list[float], top_k: int = 10) -> list[tuple[str, float]]` | Brute-force cosine similarity search. Logs a warning above 5,000 embeddings. |
 | `delete` | `(item_id: str) -> bool` | Remove an embedding. Returns `True` if found. |
 
-!!! warning
-    Linear scan complexity O(N) per query. Use a dedicated vector database
-    for production workloads.
+:::caution
+Linear scan complexity O(N) per query. Use a dedicated vector database
+for production workloads.
+:::
 
 ---
 
@@ -265,6 +266,7 @@ Implements `MemoryEntryStore` and `GarbageCollectableStore`. Thread-safe.
 | `delete_by_user` | `(user_id: str) -> int` | Delete all entries for a user. |
 | `export_user_entries` | `(user_id: str) -> list[MemoryEntry]` | Export all entries for a user (GDPR data portability). |
 
-!!! note
-    Not suitable for concurrent multi-process access. For multi-worker
-    deployments, implement `MemoryEntryStore` with a database backend.
+:::note
+Not suitable for concurrent multi-process access. For multi-worker
+deployments, implement `MemoryEntryStore` with a database backend.
+:::

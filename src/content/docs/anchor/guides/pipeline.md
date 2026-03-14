@@ -105,11 +105,12 @@ appropriate retriever:
 from anchor import classified_retriever_step
 ```
 
-!!! tip "All factory functions"
-    See the [Pipeline API Reference](../api/pipeline.md) for full signatures of
-    every factory function including `async_retriever_step`,
-    `async_postprocessor_step`, `async_reranker_step`, `auto_promotion_step`,
-    `graph_retrieval_step`, and `create_eviction_promoter`.
+:::tip[All factory functions]
+See the [Pipeline API Reference](../api/pipeline.md) for full signatures of
+every factory function including `async_retriever_step`,
+`async_postprocessor_step`, `async_reranker_step`, `auto_promotion_step`,
+`graph_retrieval_step`, and `create_eviction_promoter`.
+:::
 
 ## Decorator API
 
@@ -170,10 +171,11 @@ result = asyncio.run(pipeline.abuild("async query"))
 print(result.window.items[0].content)
 ```
 
-!!! warning
-    Passing an async function to `@pipeline.step` raises `TypeError`.
-    Passing a sync function to `@pipeline.async_step` also raises `TypeError`.
-    Use the correct decorator for each function type.
+:::caution
+Passing an async function to `@pipeline.step` raises `TypeError`.
+Passing a sync function to `@pipeline.async_step` also raises `TypeError`.
+Use the correct decorator for each function type.
+:::
 
 ## Chaining Configuration
 
@@ -265,10 +267,11 @@ async def main():
 asyncio.run(main())
 ```
 
-!!! note
-    `abuild()` supports **both** sync and async steps in the same pipeline.
-    Sync steps are called directly; async steps are awaited. This lets you mix
-    fast in-memory filters with async database lookups.
+:::note
+`abuild()` supports **both** sync and async steps in the same pipeline.
+Sync steps are called directly; async steps are awaited. This lets you mix
+fast in-memory filters with async database lookups.
+:::
 
 ## Error Handling
 
@@ -292,10 +295,11 @@ result = pipeline.build("test")
 print(result.diagnostics.get("skipped_steps"))  # ['flaky-step']
 ```
 
-!!! warning
-    When `on_error="raise"`, the `PipelineExecutionError` carries partial
-    diagnostics in its `diagnostics` attribute, so you can still inspect what
-    happened before the failure.
+:::caution
+When `on_error="raise"`, the `PipelineExecutionError` carries partial
+diagnostics in its `diagnostics` attribute, so you can still inspect what
+happened before the failure.
+:::
 
 ## Diagnostics
 

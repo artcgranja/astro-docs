@@ -100,11 +100,10 @@ from anchor.observability import Tracer
 
 **Constructor:** `Tracer()` -- no parameters.
 
-!!! note
-    `Tracer` is **not** thread-safe. Synchronise externally or use one
-    instance per thread.
-
-**`start_trace(name, attributes=None) -> TraceRecord`**
+:::note
+`Tracer` is **not** thread-safe. Synchronise externally or use one
+instance per thread.
+:::**`start_trace(name, attributes=None) -> TraceRecord`**
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -228,11 +227,10 @@ Exports spans to an OpenTelemetry collector via OTLP/HTTP.
 from anchor.observability import OTLPSpanExporter
 ```
 
-!!! warning
-    Requires `opentelemetry-exporter-otlp-proto-http` and
-    `opentelemetry-sdk`. Install with `pip install astro-anchor[otlp]`.
-
-**Constructor:**
+:::caution
+Requires `opentelemetry-exporter-otlp-proto-http` and
+`opentelemetry-sdk`. Install with `pip install astro-anchor[otlp]`.
+:::**Constructor:**
 
 ```python
 OTLPSpanExporter(
@@ -302,11 +300,10 @@ Exports metrics to an OpenTelemetry collector via OTLP/HTTP.
 from anchor.observability import OTLPMetricsExporter
 ```
 
-!!! warning
-    Requires `opentelemetry-exporter-otlp-proto-http` and
-    `opentelemetry-sdk`. Install with `pip install astro-anchor[otlp]`.
-
-**Constructor:**
+:::caution
+Requires `opentelemetry-exporter-otlp-proto-http` and
+`opentelemetry-sdk`. Install with `pip install astro-anchor[otlp]`.
+:::**Constructor:**
 
 ```python
 OTLPMetricsExporter(

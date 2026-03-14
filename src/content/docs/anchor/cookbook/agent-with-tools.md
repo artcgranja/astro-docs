@@ -9,13 +9,14 @@ decorator and `SkillRegistry`.
 
 ---
 
-!!! warning "LLM Provider Required"
-    The `Agent` class requires at least one LLM provider SDK. The default
-    provider is Anthropic: `pip install astro-anchor[anthropic]`. See the
-    [LLM Providers Guide](../guides/llm-providers.md) for all supported
-    providers. The tool creation and skill registration sections below run
-    without any provider SDK. The `agent.chat()` call at the end requires
-    a configured provider (e.g. `ANTHROPIC_API_KEY`).
+:::caution[LLM Provider Required]
+The `Agent` class requires at least one LLM provider SDK. The default
+provider is Anthropic: `pip install astro-anchor[anthropic]`. See the
+[LLM Providers Guide](../guides/llm-providers.md) for all supported
+providers. The tool creation and skill registration sections below run
+without any provider SDK. The `agent.chat()` call at the end requires
+a configured provider (e.g. `ANTHROPIC_API_KEY`).
+:::
 
 ## Overview
 
@@ -32,9 +33,11 @@ This example demonstrates:
 ```python
 from anchor import tool, AgentTool
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Basic @tool decorator -- auto-generates schema from type hints
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 @tool
 def calculate(expression: str) -> str:
     """Evaluate a mathematical expression safely.
@@ -56,9 +59,11 @@ print(f"Name: {calculate.name}")
 print(f"Description: {calculate.description}")
 print(f"Schema: {calculate.input_schema}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. @tool with explicit name and description
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 @tool(name="get_weather", description="Look up current weather for a city.")
 def weather(city: str, units: str = "celsius") -> str:
     """Get weather information."""
@@ -68,27 +73,33 @@ def weather(city: str, units: str = "celsius") -> str:
 print(f"\nName: {weather.name}")       # "get_weather"
 print(f"Schema: {weather.input_schema}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Validate tool inputs
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 valid, error = calculate.validate_input({"expression": "2 + 3"})
 print(f"\nValid input: {valid}, error: '{error}'")
 
 valid, error = calculate.validate_input({})  # missing required field
 print(f"Missing field: {valid}, error: '{error}'")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Execute tools directly
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 result = calculate.fn(expression="(10 + 5) * 2")
 print(f"\nDirect call: {result}")
 
 result = weather.fn(city="Tokyo")
 print(f"Direct call: {result}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Export to different provider formats
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Provider Schemas ===\n")
 schema = calculate.to_tool_schema()
 print(f"ToolSchema: name={schema.name}, description={schema.description}")
@@ -105,9 +116,11 @@ from anchor import (
     SkillRegistry,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Create tools for a "data analysis" skill
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 @tool
 def count_words(text: str) -> str:
     """Count the number of words in a text."""
@@ -128,9 +141,11 @@ def summarize_numbers(numbers: str) -> str:
     except ValueError:
         return "Error: provide comma-separated numbers."
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. Bundle tools into a Skill
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 data_skill = Skill(
     name="data_analysis",
     description="Tools for analyzing text and numerical data.",
@@ -139,9 +154,11 @@ data_skill = Skill(
     activation="always",  # available from the start
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Create an on-demand skill (loaded only when needed)
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 @tool
 def translate(text: str, target_language: str) -> str:
     """Translate text to a target language (demo: just wraps the text)."""
@@ -155,9 +172,11 @@ translation_skill = Skill(
     activation="on_demand",  # must be activated by the agent
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Register skills in SkillRegistry
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 registry = SkillRegistry()
 registry.register(data_skill)
 registry.register(translation_skill)
@@ -173,9 +192,11 @@ print(f"Active tools: {[t.name for t in active]}")
 prompt = registry.skill_discovery_prompt()
 print(f"\nDiscovery prompt:\n{prompt}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Activate the on-demand skill
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 registry.activate("translation")
 print(f"\nTranslation active: {registry.is_active('translation')}")
 active = registry.active_tools()
@@ -199,9 +220,11 @@ from anchor import (
     rag_tools,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. memory_tools: CRUD for persistent facts
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 memory = MemoryManager(
     conversation_tokens=2048,
     persistent_store=InMemoryEntryStore(),
@@ -221,9 +244,11 @@ search_tool = next(t for t in mem_tools if t.name == "search_facts")
 result = search_tool.fn(query="programming language preference")
 print(f"Search result: {result}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. rag_tools: search documentation
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 def embed_fn(text: str) -> list[float]:
     seed = sum(ord(c) for c in text) % 10000
     raw = [math.sin(seed * 1000 + i) for i in range(64)]
@@ -331,17 +356,19 @@ else:
 | `"always"` | Tools available from the first API round |
 | `"on_demand"` | Advertised in discovery prompt, loaded when activated |
 
-!!! tip "Tool Function Requirements"
-    Tool functions must return `str`. The `@tool` decorator extracts the
-    function name, docstring, and type hints to auto-generate the JSON
-    Schema used by the LLM.
+:::tip[Tool Function Requirements]
+Tool functions must return `str`. The `@tool` decorator extracts the
+function name, docstring, and type hints to auto-generate the JSON
+Schema used by the LLM.
+:::
 
-!!! note "Multi-Provider Agent"
-    The `Agent` class supports any LLM provider via the `LLMProvider`
-    protocol. Use `Agent(model="openai/gpt-4o")` or any other supported
-    provider. Tools are converted to a provider-agnostic `ToolSchema` via
-    `to_tool_schema()`. See the [LLM Providers Guide](../guides/llm-providers.md)
-    for details.
+:::note[Multi-Provider Agent]
+The `Agent` class supports any LLM provider via the `LLMProvider`
+protocol. Use `Agent(model="openai/gpt-4o")` or any other supported
+provider. Tools are converted to a provider-agnostic `ToolSchema` via
+`to_tool_schema()`. See the [LLM Providers Guide](../guides/llm-providers.md)
+for details.
+:::
 
 ## Next Steps
 

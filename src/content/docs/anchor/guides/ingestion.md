@@ -8,6 +8,7 @@ The ingestion module converts raw documents into `ContextItem` objects ready for
 indexing and retrieval. The pipeline follows four stages:
 
 ```
+
 Parse --> Chunk --> Enrich --> Index
 ```
 
@@ -286,11 +287,10 @@ Parsers implement the `DocumentParser` protocol and return `(text, metadata)` tu
 | `HTMLParser`       | `.html`, `.htm`          | none           |
 | `PDFParser`        | `.pdf`                   | `pypdf`        |
 
-!!! note
-    `PDFParser` requires the optional `pdf` extra:
-    `pip install astro-anchor[pdf]`
-
-`DocumentIngester` auto-selects the parser by file extension. Override via the
+:::note
+`PDFParser` requires the optional `pdf` extra:
+`pip install astro-anchor[pdf]`
+:::`DocumentIngester` auto-selects the parser by file extension. Override via the
 `parsers` constructor argument:
 
 ```python
@@ -345,10 +345,11 @@ expander = ParentExpander(keep_child=True)
 step = postprocessor_step("expand-parents", expander)
 ```
 
-!!! tip
-    Combine `ParentChildChunker` + `ParentExpander` for a complete
-    hierarchical retrieval workflow: index small children, retrieve them,
-    then expand to full parent context before the LLM sees them.
+:::tip
+Combine `ParentChildChunker` + `ParentExpander` for a complete
+hierarchical retrieval workflow: index small children, retrieve them,
+then expand to full parent context before the LLM sees them.
+:::
 
 ---
 
@@ -386,7 +387,8 @@ for item in items:
     print(f"  metadata: {item.metadata}")
 ```
 
-!!! warning
-    `SemanticChunker` calls `embed_fn` once per `chunk()` invocation for all
-    sentences in the document. Make sure your embedding function can handle
-    batch sizes equal to the sentence count.
+:::caution
+`SemanticChunker` calls `embed_fn` once per `chunk()` invocation for all
+sentences in the document. Make sure your embedding function can handle
+batch sizes equal to the sentence count.
+:::

@@ -58,9 +58,10 @@ print(f"Hit rate:    {metrics.hit_rate:.0f}")         # 1
 | `ndcg` | Normalized Discounted Cumulative Gain (binary relevance) |
 | `hit_rate` | 1.0 if at least one relevant item was retrieved |
 
-!!! tip
-    Set `k` at instantiation for a project-wide default, then override per-call
-    when needed: `calc.evaluate(retrieved, relevant, k=5)`.
+:::tip
+Set `k` at instantiation for a project-wide default, then override per-call
+when needed: `calc.evaluate(retrieved, relevant, k=5)`.
+:::
 
 ---
 
@@ -113,8 +114,9 @@ print(f"Context recall:    {rag_metrics.context_recall}")
 | `precision_fn` | `(query, contexts) -> float` | Context precision |
 | `recall_fn` | `(query, contexts, ground_truth) -> float` | Context recall |
 
-!!! note
-    Dimensions without a registered callback default to `0.0`.
+:::note
+Dimensions without a registered callback default to `0.0`.
+:::
 
 ---
 
@@ -172,9 +174,10 @@ rag_metrics = evaluator.evaluate_rag(
 )
 ```
 
-!!! warning
-    Calling `evaluate_rag()` raises `ValueError` if no `rag_evaluator` was
-    configured.
+:::caution
+Calling `evaluate_rag()` raises `ValueError` if no `rag_evaluator` was
+configured.
+:::
 
 ---
 
@@ -223,9 +226,10 @@ for metric, data in result.per_metric_comparison.items():
     print(f"  {metric}: A={data['a']:.3f} B={data['b']:.3f} delta={data['delta']:+.3f}")
 ```
 
-!!! tip
-    The t-test uses a normal-distribution approximation (no scipy dependency).
-    For small sample sizes (< 30), results are conservative.
+:::tip
+The t-test uses a normal-distribution approximation (no scipy dependency).
+For small sample sizes (< 30), results are conservative.
+:::
 
 ---
 
@@ -267,10 +271,11 @@ print(f"P95 precision:  {agg.p95_precision:.3f}")
 print(f"Min recall:     {agg.min_recall:.3f}")
 ```
 
-!!! note
-    `BatchEvaluator` uses `EvaluationSample` from `anchor.evaluation.batch`,
-    which includes `expected_ids`, `ground_truth_answer`, and `contexts` fields.
-    The A/B testing module uses its own `EvaluationSample` with `relevant_ids`.
+:::note
+`BatchEvaluator` uses `EvaluationSample` from `anchor.evaluation.batch`,
+which includes `expected_ids`, `ground_truth_answer`, and `contexts` fields.
+The A/B testing module uses its own `EvaluationSample` with `relevant_ids`.
+:::
 
 ---
 
@@ -332,9 +337,10 @@ print(f"Num annotators:  {int(metrics['num_annotators'])}")
 print(f"Num queries:     {int(metrics['num_queries'])}")
 ```
 
-!!! tip
-    Use `HumanEvaluationCollector` to bootstrap gold-standard evaluation sets,
-    then run automated evaluation with `ABTestRunner` or `BatchEvaluator`.
+:::tip
+Use `HumanEvaluationCollector` to bootstrap gold-standard evaluation sets,
+then run automated evaluation with `ABTestRunner` or `BatchEvaluator`.
+:::
 
 ---
 

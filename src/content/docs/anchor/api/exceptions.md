@@ -22,6 +22,7 @@ from anchor import (
 ## Hierarchy
 
 ```
+
 Exception
  └── AstroContextError
       ├── PipelineExecutionError

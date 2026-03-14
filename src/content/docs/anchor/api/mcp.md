@@ -22,9 +22,10 @@ from anchor.mcp import (
 )
 ```
 
-!!! note
-    The MCP bridge requires the `fastmcp` package.
-    Install with: `pip install astro-anchor[mcp]`
+:::note
+The MCP bridge requires the `fastmcp` package.
+Install with: `pip install astro-anchor[mcp]`
+:::
 
 ---
 

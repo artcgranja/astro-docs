@@ -38,9 +38,10 @@ class Formatter(Protocol):
 | `format_type` | `property -> str` | Identifier (e.g. `"anthropic"`, `"openai"`, `"generic"`) |
 | `format(window)` | `method` | Converts a `ContextWindow` into the target format |
 
-!!! note
-    `BaseFormatter` is a deprecated alias for `Formatter`. Use `Formatter`
-    in new code.
+:::note
+`BaseFormatter` is a deprecated alias for `Formatter`. Use `Formatter`
+in new code.
+:::
 
 ---
 

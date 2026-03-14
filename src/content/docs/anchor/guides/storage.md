@@ -52,11 +52,12 @@ results = store.search([0.1, 0.2, 0.3], top_k=5)
 # Returns: [("item-1", 1.0)]
 ```
 
-!!! warning
-    `InMemoryVectorStore` performs linear scan with O(N) complexity per query.
-    A warning is logged when the store exceeds 5,000 embeddings. For
-    production, use FAISS, Chroma, Qdrant, or another dedicated vector
-    database.
+:::caution
+`InMemoryVectorStore` performs linear scan with O(N) complexity per query.
+A warning is logged when the store exceeds 5,000 embeddings. For
+production, use FAISS, Chroma, Qdrant, or another dedicated vector
+database.
+:::
 
 ### InMemoryContextStore
 
@@ -159,10 +160,11 @@ Additional methods beyond the `MemoryEntryStore` protocol:
 | `export_user_entries(user_id)` | Export all entries for a user (GDPR data portability). |
 | `delete_by_user(user_id)` | Delete all entries for a user. Returns count deleted. |
 
-!!! note
-    `JsonFileMemoryStore` is not suitable for concurrent multi-process
-    access. For production use with multiple workers, implement the
-    `MemoryEntryStore` protocol backed by a database.
+:::note
+`JsonFileMemoryStore` is not suitable for concurrent multi-process
+access. For production use with multiple workers, implement the
+`MemoryEntryStore` protocol backed by a database.
+:::
 
 ---
 
@@ -176,7 +178,6 @@ handles the rest.
 
 ```python
 from typing import Any
-
 
 class RedisVectorStore:
     """Example VectorStore backed by Redis with vector search."""
@@ -213,9 +214,10 @@ store = RedisVectorStore(redis_client)
 assert isinstance(store, VectorStore)  # True -- structural subtyping
 ```
 
-!!! tip
-    All in-memory stores are thread-safe via `threading.Lock`. If your custom
-    implementation will be accessed from multiple threads, add your own locking.
+:::tip
+All in-memory stores are thread-safe via `threading.Lock`. If your custom
+implementation will be accessed from multiple threads, add your own locking.
+:::
 
 ---
 

@@ -81,10 +81,9 @@ RetrievalMetricsCalculator(k: int = 10)
 |-----------|------|---------|-------------|
 | `k` | `int` | `10` | Default cutoff for top-k evaluation |
 
-!!! warning
-    Raises `ValueError` if `k < 1`.
-
-**`evaluate(retrieved, relevant, k=None) -> RetrievalMetrics`**
+:::caution
+Raises `ValueError` if `k < 1`.
+:::**`evaluate(retrieved, relevant, k=None) -> RetrievalMetrics`**
 
 ```python
 def evaluate(
@@ -181,10 +180,9 @@ PipelineEvaluator(
 
 **`evaluate_rag(query, answer, contexts, ground_truth=None) -> RAGMetrics`** -- evaluates RAG only.
 
-!!! warning
-    Raises `ValueError` if no `rag_evaluator` was configured.
-
-**`evaluate(...) -> EvaluationResult`** -- runs both evaluations.
+:::caution
+Raises `ValueError` if no `rag_evaluator` was configured.
+:::**`evaluate(...) -> EvaluationResult`** -- runs both evaluations.
 
 ```python
 def evaluate(

@@ -55,9 +55,10 @@ print(f"Trace took {ended_trace.total_duration_ms:.1f} ms")
 | `SpanKind.INGESTION` | Indexing and ingestion |
 | `SpanKind.QUERY_TRANSFORM` | Query rewriting / expansion |
 
-!!! note
-    `Tracer` is **not** thread-safe. Use one instance per thread or
-    synchronise externally for concurrent tracing.
+:::note
+`Tracer` is **not** thread-safe. Use one instance per thread or
+synchronise externally for concurrent tracing.
+:::
 
 ---
 
@@ -98,10 +99,11 @@ for span in exporter.get_spans():
     print(f"  {span.name}: {span.duration_ms:.1f} ms [{span.status}]")
 ```
 
-!!! tip
-    `TracingCallback` automatically infers `SpanKind` from the step name
-    using heuristics (e.g. a step named `"rerank"` maps to
-    `SpanKind.RERANKING`).
+:::tip
+`TracingCallback` automatically infers `SpanKind` from the step name
+using heuristics (e.g. a step named `"rerank"` maps to
+`SpanKind.RERANKING`).
+:::
 
 ---
 
@@ -174,10 +176,11 @@ callback = TracingCallback(exporters=[exporter])
 exporter.shutdown()
 ```
 
-!!! warning
-    `OTLPSpanExporter` raises `ImportError` at construction if the
-    `opentelemetry-exporter-otlp-proto-http` and `opentelemetry-sdk`
-    packages are not installed.
+:::caution
+`OTLPSpanExporter` raises `ImportError` at construction if the
+`opentelemetry-exporter-otlp-proto-http` and `opentelemetry-sdk`
+packages are not installed.
+:::
 
 ---
 
@@ -314,9 +317,10 @@ The callback looks for these metadata keys on `ContextItem.metadata`:
 | `cost_per_input_token` | `float` | USD per input token |
 | `cost_per_output_token` | `float` | USD per output token |
 
-!!! tip
-    Combine `TracingCallback` and `CostTrackingCallback` on the same
-    pipeline to get both performance traces and cost breakdowns.
+:::tip
+Combine `TracingCallback` and `CostTrackingCallback` on the same
+pipeline to get both performance traces and cost breakdowns.
+:::
 
 ---
 

@@ -19,6 +19,7 @@ The multi-modal system has three layers:
 3. **Table Parsers** -- extract tables from Markdown and HTML documents
 
 ```
+
 Document (HTML/Markdown)
     |
     v
@@ -189,9 +190,10 @@ encoder = CompositeEncoder(encoders={
 })
 ```
 
-!!! warning
-    `CompositeEncoder` raises `ValueError` if it encounters a modality with no
-    registered encoder.
+:::caution
+`CompositeEncoder` raises `ValueError` if it encounters a modality with no
+registered encoder.
+:::
 
 ## Table Parsers
 

@@ -111,10 +111,9 @@ SummaryBufferMemory(
 | `tokenizer` | `Tokenizer \| None` | `None` | Custom tokenizer. |
 | `summary_priority` | `int` | `6` | Priority for the summary context item. |
 
-!!! warning
-    Providing both or neither compaction function raises `ValueError`.
-
-| Property | Type | Description |
+:::caution
+Providing both or neither compaction function raises `ValueError`.
+:::| Property | Type | Description |
 |---|---|---|
 | `summary` | `str \| None` | Running summary, or `None` before first eviction. |
 | `summary_tokens` | `int` | Token count of the current summary. |
@@ -298,9 +297,10 @@ SimilarityConsolidator(
 |---|---|---|
 | `consolidate(new_entries, existing)` | `list[tuple[MemoryOperation, MemoryEntry \| None]]` | `ADD` (new), `UPDATE` (merged), or `NONE` (duplicate) for each entry. |
 
-!!! note
-    Merged entries keep the longer content, combine tags/links/metadata,
-    increment `access_count`, and use the higher `relevance_score`.
+:::note
+Merged entries keep the longer content, combine tags/links/metadata,
+increment `access_count`, and use the higher `relevance_score`.
+:::
 
 ---
 

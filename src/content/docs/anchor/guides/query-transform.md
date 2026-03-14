@@ -10,6 +10,7 @@ well with the embedding space; transforming it into one or more alternative
 phrasings helps the retriever surface better results.
 
 ```
+
 User Query --> Transform --> [Query 1, Query 2, ...] --> Retrieve --> Merge
 ```
 
@@ -162,10 +163,11 @@ for q in all_queries:
     print(f"  - {q.query_str}")
 ```
 
-!!! note
-    `QueryTransformPipeline` also supports `atransform()` for async execution.
-    Transformers that implement `AsyncQueryTransformer` are called via
-    `atransform`; others fall back to the synchronous `transform` method.
+:::note
+`QueryTransformPipeline` also supports `atransform()` for async execution.
+Transformers that implement `AsyncQueryTransformer` are called via
+`atransform`; others fall back to the synchronous `transform` method.
+:::
 
 ---
 
@@ -266,13 +268,15 @@ from anchor.pipeline import ContextPipeline
 pipeline = ContextPipeline(steps=[step])
 ```
 
-!!! tip
-    Combine `QueryTransformPipeline` with `query_transform_step` to chain
-    multiple transformers and use the combined output for retrieval in a
-    single pipeline step.
+:::tip
+Combine `QueryTransformPipeline` with `query_transform_step` to chain
+multiple transformers and use the combined output for retrieval in a
+single pipeline step.
+:::
 
-!!! warning
-    Each expanded query triggers a separate retrieval call. With
-    `MultiQueryTransformer(num_queries=3)` you get 4 retrieval calls
-    (original + 3 variations). Keep `top_k` and `num_queries` reasonable
-    to control latency and cost.
+:::caution
+Each expanded query triggers a separate retrieval call. With
+`MultiQueryTransformer(num_queries=3)` you get 4 retrieval calls
+(original + 3 variations). Keep `top_k` and `num_queries` reasonable
+to control latency and cost.
+:::

@@ -39,10 +39,11 @@ pipeline = (
 )
 ```
 
-!!! tip "Error Policy Options"
-    - `on_error="raise"` (default) -- stop the pipeline and propagate the exception
-    - `on_error="skip"` -- log the error and continue with items from previous steps
-    - `on_error="empty"` -- log the error and continue with an empty item list
+:::tip[Error Policy Options]
+- `on_error="raise"` (default) -- stop the pipeline and propagate the exception
+- `on_error="skip"` -- log the error and continue with items from previous steps
+- `on_error="empty"` -- log the error and continue with an empty item list
+:::
 
 ### Error Monitoring with Callbacks
 
@@ -78,9 +79,10 @@ pipeline = (
 )
 ```
 
-!!! warning "Callback Safety"
-    Callback errors are swallowed and logged at WARNING level.
-    A failing callback never breaks the pipeline.
+:::caution[Callback Safety]
+Callback errors are swallowed and logged at WARNING level.
+A failing callback never breaks the pipeline.
+:::
 
 ---
 
@@ -133,11 +135,12 @@ budget = TokenBudget(
 pipeline = ContextPipeline(budget=budget)
 ```
 
-!!! warning "Overflow Strategies"
-    Each ``BudgetAllocation`` has an ``overflow_strategy``:
+:::caution[Overflow Strategies]
+Each ``BudgetAllocation`` has an ``overflow_strategy``:
 
-    - `"truncate"` (default) -- truncate content to fit within the allocation
-    - `"drop"` -- drop entire items that exceed the allocation
+- `"truncate"` (default) -- truncate content to fit within the allocation
+- `"drop"` -- drop entire items that exceed the allocation
+:::
 
 ### Monitoring Token Usage
 
@@ -211,10 +214,11 @@ removed = memory.gc_facts(max_age_days=30)
 print(f"Garbage collected {removed} stale facts")
 ```
 
-!!! tip "Consolidation in Production"
-    Run `consolidate_facts()` on a schedule (e.g., daily cron job) rather
-    than on every request. Consolidation requires comparing all fact pairs,
-    which is O(n^2) in the number of facts.
+:::tip[Consolidation in Production]
+Run `consolidate_facts()` on a schedule (e.g., daily cron job) rather
+than on every request. Consolidation requires comparing all fact pairs,
+which is O(n^2) in the number of facts.
+:::
 
 ---
 
@@ -276,10 +280,11 @@ fast_reranker = CrossEncoderReranker(score_fn=overlap_scorer, top_k=10)
 # )
 ```
 
-!!! note "Reranker Trade-offs"
-    - **Word-overlap**: fast (< 1ms per doc), no dependencies, moderate quality
-    - **Cross-encoder**: slow (50-100ms per doc), high quality, needs GPU for scale
-    - **Compromise**: retrieve top 50 with dense, rerank top 10 with cross-encoder
+:::note[Reranker Trade-offs]
+- **Word-overlap**: fast (< 1ms per doc), no dependencies, moderate quality
+- **Cross-encoder**: slow (50-100ms per doc), high quality, needs GPU for scale
+- **Compromise**: retrieve top 50 with dense, rerank top 10 with cross-encoder
+:::
 
 ---
 
@@ -364,13 +369,15 @@ pipeline = (
 )
 ```
 
-!!! tip "Structured Logging"
-    Combine `TracingCallback` with structured logging (e.g., `structlog`)
-    to get machine-parseable logs with correlation IDs that link pipeline
-    builds to upstream HTTP requests.
+:::tip[Structured Logging]
+Combine `TracingCallback` with structured logging (e.g., `structlog`)
+to get machine-parseable logs with correlation IDs that link pipeline
+builds to upstream HTTP requests.
+:::
 
-!!! note "OTLP Dependencies"
-    OTLP export requires `pip install astro-anchor[otlp]`.
+:::note[OTLP Dependencies]
+OTLP export requires `pip install astro-anchor[otlp]`.
+:::
 
 ---
 
@@ -395,7 +402,6 @@ def test_quality_filter():
 
     assert len(filtered) == 2
     assert all(item.score > 0.3 for item in filtered)
-
 
 def test_custom_retriever_returns_context_items():
     """Test that a custom retriever returns properly typed results."""
@@ -444,7 +450,6 @@ def test_full_pipeline_build():
     assert SourceType.RETRIEVAL in sources
     assert SourceType.MEMORY in sources
 
-
 def test_pipeline_handles_empty_retrieval():
     """Test that the pipeline handles no results gracefully."""
     empty_retriever = create_test_retriever([])  # no docs
@@ -462,10 +467,11 @@ def test_pipeline_handles_empty_retrieval():
     assert result.diagnostics["items_included"] >= 1  # at least system prompt
 ```
 
-!!! warning "Deterministic Tests"
-    Use deterministic embedding functions (like the `embed_fn` in the examples)
-    for tests. Real embedding models produce slightly different vectors across
-    runs, which makes assertions flaky.
+:::caution[Deterministic Tests]
+Use deterministic embedding functions (like the `embed_fn` in the examples)
+for tests. Real embedding models produce slightly different vectors across
+runs, which makes assertions flaky.
+:::
 
 ---
 
@@ -541,12 +547,14 @@ class LazyEmbeddingRetriever:
         return self._retriever.retrieve(query, top_k=top_k)
 ```
 
-!!! tip "Profile Before Optimizing"
-    Use `result.diagnostics["steps"]` to identify which pipeline steps are
-    slowest before adding complexity like caching or async. The step timing
-    breakdown is included in every `BuildResult`.
+:::tip[Profile Before Optimizing]
+Use `result.diagnostics["steps"]` to identify which pipeline steps are
+slowest before adding complexity like caching or async. The step timing
+breakdown is included in every `BuildResult`.
+:::
 
-!!! tip "Connection Pooling"
-    When using external vector databases (Pinecone, Weaviate, Qdrant), reuse
-    client connections across requests. Create the client once at startup and
-    pass it to your retriever, rather than creating a new connection per query.
+:::tip[Connection Pooling]
+When using external vector databases (Pinecone, Weaviate, Qdrant), reuse
+client connections across requests. Create the client once at startup and
+pass it to your retriever, rather than creating a new connection per query.
+:::

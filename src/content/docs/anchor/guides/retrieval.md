@@ -77,9 +77,10 @@ results = retriever.retrieve(query, top_k=5)
 If the `QueryBundle` already carries a pre-computed `embedding`, the retriever
 uses it directly. Otherwise it calls `embed_fn` on the query text.
 
-!!! tip
-    Pre-compute the query embedding once and set `query.embedding` if you need
-    to share the same embedding across multiple retrievers.
+:::tip
+Pre-compute the query embedding once and set `query.embedding` if you need
+to share the same embedding across multiple retrievers.
+:::
 
 ---
 
@@ -87,11 +88,12 @@ uses it directly. Otherwise it calls `embed_fn` on the query text.
 
 `SparseRetriever` uses BM25 for term-frequency-based retrieval.
 
-!!! warning
-    The `rank-bm25` package is required. Install it with:
-    ```
-    pip install astro-anchor[bm25]
-    ```
+:::caution
+The `rank-bm25` package is required. Install it with:
+```bash
+pip install astro-anchor[bm25]
+```
+:::
 
 ```python
 from anchor.retrieval import SparseRetriever
@@ -117,10 +119,11 @@ results = retriever.retrieve(query, top_k=5)
 Scores are normalized to `[0, 1]` by dividing by the maximum BM25 score in
 the corpus. Zero-score items are excluded from results.
 
-!!! note
-    The default tokenizer splits on whitespace and lowercases. For better
-    results, provide a custom `tokenize_fn` that handles stemming, stop-word
-    removal, or subword tokenization.
+:::note
+The default tokenizer splits on whitespace and lowercases. For better
+results, provide a custom `tokenize_fn` that handles stemming, stop-word
+removal, or subword tokenization.
+:::
 
 ---
 
@@ -150,6 +153,7 @@ hybrid = HybridRetriever(
 For each document `d` across `N` ranking lists:
 
 ```
+
 RRF(d) = sum(weight_i / (rrf_k + rank_i(d)))
 ```
 
@@ -157,10 +161,11 @@ The smoothing constant `rrf_k` (default 60, from the original RRF paper)
 prevents top-ranked items from dominating excessively. Final scores are
 normalized to `[0, 1]`.
 
-!!! tip
-    If one retriever fails, `HybridRetriever` skips it and continues with the
-    remaining retrievers. It only raises `RetrieverError` when **all**
-    sub-retrievers fail.
+:::tip
+If one retriever fails, `HybridRetriever` skips it and continues with the
+remaining retrievers. It only raises `RetrieverError` when **all**
+sub-retrievers fail.
+:::
 
 ---
 
@@ -213,10 +218,11 @@ reranked = reranker.process(items, query)
 | `score_fn` | `Callable[[str, str], float]` | Takes `(query_str, doc_content)` and returns a relevance score. |
 | `top_k` | `int \| None` | Maximum items to return. `None` keeps all items. |
 
-!!! note
-    For the `Reranker` protocol (used by `RerankerPipeline`), see
-    [CrossEncoderReranker](advanced-retrieval.md) in the advanced retrieval
-    guide.
+:::note
+For the `Reranker` protocol (used by `RerankerPipeline`), see
+[CrossEncoderReranker](advanced-retrieval.md) in the advanced retrieval
+guide.
+:::
 
 ---
 
@@ -239,8 +245,8 @@ from anchor.retrieval import (
 )
 from anchor.storage import InMemoryContextStore, InMemoryVectorStore
 
-
-# --- Deterministic embedding function (for demonstration) ---
+# --- Deterministic embedding function (for demonstration)
+---
 def embed_fn(text: str) -> list[float]:
     """Produce a 4-dimensional embedding from character values."""
     vals = [ord(c) for c in text[:50]]
@@ -253,12 +259,13 @@ def embed_fn(text: str) -> list[float]:
     norm = math.sqrt(sum(v * v for v in raw)) or 1.0
     return [v / norm for v in raw]
 
-
-# --- Create stores ---
+# --- Create stores
+---
 vector_store = InMemoryVectorStore()
 context_store = InMemoryContextStore()
 
-# --- Prepare documents ---
+# --- Prepare documents
+---
 docs = [
     ContextItem(content="Authentication uses JWT tokens for session management.", source=SourceType.RETRIEVAL),
     ContextItem(content="The database schema includes users and roles tables.", source=SourceType.RETRIEVAL),
@@ -266,7 +273,8 @@ docs = [
     ContextItem(content="User passwords are hashed with bcrypt before storage.", source=SourceType.RETRIEVAL),
 ]
 
-# --- Dense retriever ---
+# --- Dense retriever
+---
 dense = DenseRetriever(
     vector_store=vector_store,
     context_store=context_store,
@@ -274,11 +282,13 @@ dense = DenseRetriever(
 )
 dense.index(docs)
 
-# --- Sparse retriever ---
+# --- Sparse retriever
+---
 sparse = SparseRetriever()
 sparse.index(docs)
 
-# --- Individual retrieval ---
+# --- Individual retrieval
+---
 query = QueryBundle(query_str="How does user authentication work?")
 dense_results = dense.retrieve(query, top_k=3)
 sparse_results = sparse.retrieve(query, top_k=3)
@@ -291,7 +301,8 @@ print("\nSparse results:")
 for item in sparse_results:
     print(f"  [{item.score:.3f}] {item.content[:60]}...")
 
-# --- Hybrid retrieval ---
+# --- Hybrid retrieval
+---
 hybrid = HybridRetriever(
     retrievers=[dense, sparse],
     weights=[0.6, 0.4],
@@ -302,7 +313,8 @@ print("\nHybrid results:")
 for item in hybrid_results:
     print(f"  [{item.score:.3f}] {item.content[:60]}...")
 
-# --- Standalone RRF fusion ---
+# --- Standalone RRF fusion
+---
 fused = rrf_fuse(
     ranked_lists=[dense_results, sparse_results],
     weights=[0.6, 0.4],
@@ -313,14 +325,14 @@ print("\nStandalone RRF fusion:")
 for item in fused:
     print(f"  [{item.score:.3f}] {item.content[:60]}...")
 
-# --- Reranking ---
+# --- Reranking
+---
 def my_scorer(query_str: str, doc: str) -> float:
     """Simple keyword overlap scorer."""
     query_terms = set(query_str.lower().split())
     doc_terms = set(doc.lower().split())
     overlap = len(query_terms & doc_terms)
     return overlap / max(len(query_terms), 1)
-
 
 reranker = ScoreReranker(score_fn=my_scorer, top_k=2)
 reranked = reranker.process(hybrid_results, query)

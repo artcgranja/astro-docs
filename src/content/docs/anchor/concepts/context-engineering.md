@@ -104,11 +104,12 @@ class MyRetriever:
 This makes it trivial to integrate existing code, wrap third-party APIs, or
 test with simple stubs.
 
-!!! tip "Duck typing for AI"
-    Protocols give you the benefits of interfaces (type safety, IDE
-    autocompletion, runtime checking with `isinstance`) without the rigidity
-    of inheritance. See the [Protocols](protocols.md) concept page for
-    details.
+:::tip[Duck typing for AI]
+Protocols give you the benefits of interfaces (type safety, IDE
+autocompletion, runtime checking with `isinstance`) without the rigidity
+of inheritance. See the [Protocols](protocols.md) concept page for
+details.
+:::
 
 ## What anchor Is Not
 

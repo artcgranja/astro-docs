@@ -12,44 +12,44 @@ icon: material/download
 
 ## Install the package
 
-=== "pip"
+**pip**
 
-    ```bash
-    pip install astro-anchor
-    ```
+```bash
+pip install astro-anchor
+```
 
-=== "uv"
+**uv**
 
-    ```bash
-    uv add astro-anchor
-    ```
+```bash
+uv add astro-anchor
+```
 
 ## Optional extras
 
 anchor ships with several optional dependency groups. Install only
 what you need, or grab everything at once.
 
-=== "pip"
+**pip**
 
-    ```bash
-    pip install astro-anchor[bm25]       # BM25 sparse retrieval
-    pip install astro-anchor[cli]        # CLI tools (typer + rich)
-    pip install astro-anchor[flashrank]  # FlashRank reranker
-    pip install astro-anchor[anthropic]  # Anthropic token counting
-    pip install astro-anchor[otlp]       # OpenTelemetry export
-    pip install astro-anchor[all]        # Everything above
-    ```
+```bash
+pip install astro-anchor[bm25]       # BM25 sparse retrieval
+pip install astro-anchor[cli]        # CLI tools (typer + rich)
+pip install astro-anchor[flashrank]  # FlashRank reranker
+pip install astro-anchor[anthropic]  # Anthropic token counting
+pip install astro-anchor[otlp]       # OpenTelemetry export
+pip install astro-anchor[all]        # Everything above
+```
 
-=== "uv"
+**uv**
 
-    ```bash
-    uv add astro-anchor[bm25]
-    uv add astro-anchor[cli]
-    uv add astro-anchor[flashrank]
-    uv add astro-anchor[anthropic]
-    uv add astro-anchor[otlp]
-    uv add astro-anchor[all]
-    ```
+```bash
+uv add astro-anchor[bm25]
+uv add astro-anchor[cli]
+uv add astro-anchor[flashrank]
+uv add astro-anchor[anthropic]
+uv add astro-anchor[otlp]
+uv add astro-anchor[all]
+```
 
 | Extra | What it adds | When you need it |
 |-------|-------------|-----------------|
@@ -79,21 +79,21 @@ anchor --version
 To work on anchor itself, clone the repository and install in
 editable mode with all extras:
 
-=== "pip"
+**pip**
 
-    ```bash
-    git clone https://github.com/artcgranja/anchor.git
-    cd anchor
-    pip install -e ".[all,dev]"
-    ```
+```bash
+git clone https://github.com/artcgranja/anchor.git
+cd anchor
+pip install -e ".[all,dev]"
+```
 
-=== "uv"
+**uv**
 
-    ```bash
-    git clone https://github.com/artcgranja/anchor.git
-    cd anchor
-    uv sync --all-extras
-    ```
+```bash
+git clone https://github.com/artcgranja/anchor.git
+cd anchor
+uv sync --all-extras
+```
 
 Run the test suite to make sure everything is working:
 
@@ -101,6 +101,7 @@ Run the test suite to make sure everything is working:
 pytest
 ```
 
-!!! tip "Next step"
-    Head over to the [Quickstart](quickstart.md) to build your first pipeline
-    in under 30 seconds.
+:::tip[Next step]
+Head over to the [Quickstart](quickstart.md) to build your first pipeline
+in under 30 seconds.
+:::

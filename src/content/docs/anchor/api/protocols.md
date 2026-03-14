@@ -355,8 +355,9 @@ class MemoryQueryEnricher(Protocol):
 
 **Returns:** An enriched query string.
 
-!!! note
-    `QueryEnricher` is a deprecated alias for `MemoryQueryEnricher`.
+:::note
+`QueryEnricher` is a deprecated alias for `MemoryQueryEnricher`.
+:::
 
 ### RecencyScorer
 
@@ -673,9 +674,10 @@ class MyRetriever:
 assert isinstance(MyRetriever(), Retriever)
 ```
 
-!!! tip
-    All protocols are `@runtime_checkable`, so you can use `isinstance()`
-    checks at runtime for validation and debugging.
+:::tip
+All protocols are `@runtime_checkable`, so you can use `isinstance()`
+checks at runtime for validation and debugging.
+:::
 
 ---
 

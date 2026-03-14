@@ -41,19 +41,22 @@ from anchor import (
     retriever_step,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Deterministic embedding function (no API key needed)
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 def embed_fn(text: str) -> list[float]:
     seed = sum(ord(c) for c in text) % 10000
     raw = [math.sin(seed * 1000 + i) for i in range(64)]
     norm = math.sqrt(sum(x * x for x in raw))
     return [x / norm for x in raw] if norm else raw
 
-
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. Sample documents
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 documents = [
     "Python is a versatile programming language used for web development, "
     "data science, machine learning, and automation.",
@@ -78,9 +81,11 @@ items = [
     for doc in documents
 ]
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Create a DenseRetriever and index documents
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 dense = DenseRetriever(
     vector_store=InMemoryVectorStore(),
     context_store=InMemoryContextStore(),
@@ -89,9 +94,11 @@ dense = DenseRetriever(
 indexed = dense.index(items)
 print(f"Indexed {indexed} documents into DenseRetriever")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Create a reranker (deterministic scoring for demo)
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 def simple_scorer(query: str, doc: str) -> float:
     """Score based on word overlap (no external model needed)."""
     query_words = set(query.lower().split())
@@ -101,9 +108,11 @@ def simple_scorer(query: str, doc: str) -> float:
 
 reranker = CrossEncoderReranker(score_fn=simple_scorer, top_k=5)
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Build the pipeline with retriever + reranker + filter
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 pipeline = (
     ContextPipeline(max_tokens=4096)
     .add_step(retriever_step("dense-search", dense, top_k=10))
@@ -113,9 +122,11 @@ pipeline = (
     .add_system_prompt("You are a helpful AI assistant specializing in RAG.")
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 6. Query the pipeline
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 query = QueryBundle(
     query_str="How does hybrid retrieval work?",
     embedding=embed_fn("How does hybrid retrieval work?"),
@@ -129,9 +140,11 @@ for item in result.window.items:
         method = item.metadata.get("retrieval_method", "unknown")
         print(f"  [{score}] ({method}) {item.content[:80]}...")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 7. Inspect diagnostics
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Pipeline Diagnostics ===\n")
 diag = result.diagnostics
 print(f"  Build time:        {result.build_time_ms:.1f} ms")
@@ -145,9 +158,11 @@ for step in diag.get("steps", []):
     print(f"    {step['name']}: {step['time_ms']:.1f} ms "
           f"({step['items_after']} items)")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 8. Format for Anthropic API
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Anthropic-Formatted Output ===\n")
 anthropic_pipeline = pipeline.with_formatter(AnthropicFormatter())
 anthropic_result = anthropic_pipeline.build(query)
@@ -159,9 +174,11 @@ if isinstance(formatted, dict):
     print(f"  System blocks: {len(formatted.get('system', []))}")
     print(f"  Messages: {len(formatted.get('messages', []))}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 9. Using the decorator API instead of factory functions
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Decorator API ===\n")
 decorator_pipeline = ContextPipeline(max_tokens=4096)
 
@@ -214,16 +231,18 @@ hybrid = HybridRetriever(
 )
 ```
 
-!!! tip "Embedding at Query Time"
-    When using `DenseRetriever` with an `embed_fn`, you can pass either a
-    plain string or a `QueryBundle` with a pre-computed embedding. If you
-    pass a string, the retriever calls `embed_fn` automatically.
+:::tip[Embedding at Query Time]
+When using `DenseRetriever` with an `embed_fn`, you can pass either a
+plain string or a `QueryBundle` with a pre-computed embedding. If you
+pass a string, the retriever calls `embed_fn` automatically.
+:::
 
-!!! note "Reranker vs PostProcessor"
-    `reranker_step()` expects an object with a `rerank(query, items, top_k)`
-    method. `postprocessor_step()` expects `process(items, query)`. Use
-    `CrossEncoderReranker` for the reranker protocol, or `ScoreReranker`
-    for the postprocessor protocol.
+:::note[Reranker vs PostProcessor]
+`reranker_step()` expects an object with a `rerank(query, items, top_k)`
+method. `postprocessor_step()` expects `process(items, query)`. Use
+`CrossEncoderReranker` for the reranker protocol, or `ScoreReranker`
+for the postprocessor protocol.
+:::
 
 ## Next Steps
 

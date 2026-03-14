@@ -23,6 +23,7 @@ The memory system has three tiers:
 `MemoryManager` sits on top, producing `ContextItem` objects for the pipeline.
 
 ```
+
 MemoryManager
   |-- conversation: SlidingWindowMemory | SummaryBufferMemory
   |-- persistent_store: MemoryEntryStore (optional)
@@ -57,9 +58,10 @@ summary_mem = SummaryBufferMemory(max_tokens=2048, compact_fn=compact)
 manager = MemoryManager(conversation_memory=summary_mem)
 ```
 
-!!! tip
-    When `conversation_memory` is provided, the `conversation_tokens`,
-    `tokenizer`, and `on_evict` parameters are ignored.
+:::tip
+When `conversation_memory` is provided, the `conversation_tokens`,
+`tokenizer`, and `on_evict` parameters are ignored.
+:::
 
 ## SlidingWindowMemory
 
@@ -140,9 +142,10 @@ def progressive(turns, previous_summary):
 mem = SummaryBufferMemory(max_tokens=512, progressive_compact_fn=progressive)
 ```
 
-!!! note
-    If the compaction function raises an exception, the raw turn content
-    is used as a fallback so evicted data is never lost.
+:::note
+If the compaction function raises an exception, the raw turn content
+is used as a fallback so evicted data is never lost.
+:::
 
 ## SimpleGraphMemory
 
@@ -171,9 +174,10 @@ memory_ids = graph.get_related_memory_ids("alice", max_depth=2)
 print(memory_ids)  # ['mem-001', 'mem-002']
 ```
 
-!!! tip
-    `add_relationship` auto-creates nodes for source and target if they
-    do not already exist. `link_memory` requires the entity to exist.
+:::tip
+`add_relationship` auto-creates nodes for source and target if they
+do not already exist. `link_memory` requires the entity to exist.
+:::
 
 ## Eviction Policies
 
@@ -268,9 +272,10 @@ for action, entry in results:
     print(action, entry.content if entry else "(skipped)")
 ```
 
-!!! warning
-    The library never calls an LLM. You provide the `embed_fn` which
-    can use any embedding provider (OpenAI, Cohere, local models, etc.).
+:::caution
+The library never calls an LLM. You provide the `embed_fn` which
+can use any embedding provider (OpenAI, Cohere, local models, etc.).
+:::
 
 ## MemoryGarbageCollector and GCStats
 
@@ -322,9 +327,10 @@ manager.delete_fact(entry.id)
 all_facts = manager.get_all_facts()
 ```
 
-!!! warning
-    Calling `add_fact` without a configured `persistent_store` raises
-    `StorageError`. Always pass a `MemoryEntryStore` to the constructor.
+:::caution
+Calling `add_fact` without a configured `persistent_store` raises
+`StorageError`. Always pass a `MemoryEntryStore` to the constructor.
+:::
 
 ## MemoryCallback and CallbackExtractor
 

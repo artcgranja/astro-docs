@@ -41,19 +41,22 @@ from anchor.evaluation.ab_testing import (
     EvaluationSample,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Deterministic embedding function
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 def embed_fn(text: str) -> list[float]:
     seed = sum(ord(c) for c in text) % 10000
     raw = [math.sin(seed * 1000 + i) for i in range(64)]
     norm = math.sqrt(sum(x * x for x in raw))
     return [x / norm for x in raw] if norm else raw
 
-
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. Build a knowledge base with known document IDs
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 knowledge_base = {
     "doc-python": "Python is a versatile language for web and data science.",
     "doc-rag": "RAG combines retrieval with generation for grounded answers.",
@@ -72,9 +75,11 @@ items = [
     for doc_id, content in knowledge_base.items()
 ]
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Create two retriever configurations to compare
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 
 # Configuration A: standard dense retriever
 retriever_a = DenseRetriever(
@@ -98,9 +103,11 @@ retriever_b = DenseRetriever(
 )
 retriever_b.index(items)
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Create an evaluation dataset with ground-truth relevance
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 dataset = EvaluationDataset(
     name="retrieval-benchmark",
     samples=[
@@ -135,9 +142,11 @@ dataset = EvaluationDataset(
 print(f"Dataset: {dataset.name}")
 print(f"Samples: {len(dataset.samples)}\n")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Evaluate a single query with RetrievalMetricsCalculator
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("=== Single Query Evaluation ===\n")
 
 calculator = RetrievalMetricsCalculator(k=5)
@@ -167,9 +176,11 @@ for i, item in enumerate(retrieved, 1):
     is_relevant = "Y" if item.id in relevant_set else "N"
     print(f"    {i}. [{is_relevant}] {item.id}: {item.content[:50]}...")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 6. Use PipelineEvaluator for structured evaluation
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== PipelineEvaluator ===\n")
 
 evaluator = PipelineEvaluator(retrieval_calculator=calculator)
@@ -185,9 +196,11 @@ for sample in dataset.samples[:3]:
     print(f"    P@5={m.precision_at_k:.2f}  R@5={m.recall_at_k:.2f}  "
           f"MRR={m.mrr:.2f}  NDCG={m.ndcg:.2f}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 7. A/B test two retriever configurations
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== A/B Test: Retriever A vs Retriever B ===\n")
 
 ab_runner = ABTestRunner(evaluator=evaluator, dataset=dataset)
@@ -217,9 +230,11 @@ print(f"  P-value:        {ab_result.p_value:.4f}")
 print(f"  Significant:    {ab_result.is_significant}")
 print(f"  Sig. level:     {ab_result.significance_level}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 8. Inspect per-metric comparison
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Per-Metric Deltas ===\n")
 
 for metric_name, comparison in ab_result.per_metric_comparison.items():
@@ -249,21 +264,24 @@ for metric_name, comparison in ab_result.per_metric_comparison.items():
 - **winner = "a" or "b"**: that retriever performed significantly better
 - **per_metric_comparison**: shows exactly where each retriever wins
 
-!!! tip "Sample Size for A/B Tests"
-    For reliable statistical significance, use at least 20-30 evaluation
-    samples. Fewer samples may produce high p-values even when there is
-    a real difference.
+:::tip[Sample Size for A/B Tests]
+For reliable statistical significance, use at least 20-30 evaluation
+samples. Fewer samples may produce high p-values even when there is
+a real difference.
+:::
 
-!!! note "No LLM Required for Retrieval Metrics"
-    `RetrievalMetricsCalculator` is purely computational -- it compares
-    retrieved item IDs against known relevant IDs. No API key or LLM
-    call is needed.
+:::note[No LLM Required for Retrieval Metrics]
+`RetrievalMetricsCalculator` is purely computational -- it compares
+retrieved item IDs against known relevant IDs. No API key or LLM
+call is needed.
+:::
 
-!!! warning "Paired T-Test Approximation"
-    The A/B test uses a normal approximation for the t-test statistic,
-    which is conservative for small sample sizes. For production-grade
-    significance testing with small datasets, consider using `scipy`
-    for exact t-distribution p-values.
+:::caution[Paired T-Test Approximation]
+The A/B test uses a normal approximation for the t-test statistic,
+which is conservative for small sample sizes. For production-grade
+significance testing with small datasets, consider using `scipy`
+for exact t-distribution p-values.
+:::
 
 ## Next Steps
 

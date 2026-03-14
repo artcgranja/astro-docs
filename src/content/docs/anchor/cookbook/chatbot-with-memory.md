@@ -32,10 +32,12 @@ from anchor import (
     QueryBundle,
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 1. Create a memory manager with a small token budget
 #    (small budget so we can see eviction in action)
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 evicted_log: list[str] = []
 
 def on_evict(turns):
@@ -53,9 +55,11 @@ memory = MemoryManager(
     ),
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 2. Build the pipeline
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 pipeline = (
     ContextPipeline(max_tokens=512)
     .with_memory(memory)
@@ -63,9 +67,11 @@ pipeline = (
     .add_system_prompt("You are a helpful travel assistant.")
 )
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 3. Simulate a multi-turn conversation
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 conversations = [
     ("user", "I'm planning a trip to Japan next spring."),
     ("assistant", "Great choice! Spring is perfect for cherry blossoms. "
@@ -88,9 +94,11 @@ for role, content in conversations:
         memory.add_assistant_message(content)
         print(f"Assistant: {content}")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 4. Build context and inspect what survived eviction
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Building Context ===\n")
 result = pipeline.build("What about food recommendations?")
 
@@ -110,9 +118,11 @@ if evicted_log:
     for line in evicted_log:
         print(line)
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 5. Persistent facts survive eviction
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Persistent Facts ===\n")
 
 memory.add_fact("User is planning a trip to Japan in spring")
@@ -132,9 +142,11 @@ for item in context_items:
     src = item.source.value
     print(f"  [{src}] (priority={item.priority}) {item.content[:60]}...")
 
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 # 6. Duplicate facts are automatically deduplicated
-# ---------------------------------------------------------------
+# ------------------------------------------------------------
+---
 print("\n=== Deduplication ===\n")
 before = len(memory.get_all_facts())
 memory.add_fact("User is planning a trip to Japan in spring")  # duplicate
@@ -181,14 +193,16 @@ window = SlidingWindowMemory(
 )
 ```
 
-!!! tip "Choosing a Token Budget"
-    Set `conversation_tokens` to roughly 50-60% of your total `max_tokens`
-    to leave room for system prompts and retrieval results.
+:::tip[Choosing a Token Budget]
+Set `conversation_tokens` to roughly 50-60% of your total `max_tokens`
+to leave room for system prompts and retrieval results.
+:::
 
-!!! warning "Memory is Per-Instance"
-    `SlidingWindowMemory` is in-memory only. For persistence across sessions,
-    use `JsonFileMemoryStore` as the `persistent_store` or implement a custom
-    `MemoryEntryStore`.
+:::caution[Memory is Per-Instance]
+`SlidingWindowMemory` is in-memory only. For persistence across sessions,
+use `JsonFileMemoryStore` as the `persistent_store` or implement a custom
+`MemoryEntryStore`.
+:::
 
 ## Next Steps
 

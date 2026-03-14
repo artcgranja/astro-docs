@@ -53,10 +53,11 @@ When caching is enabled:
 - The last retrieval/context message also gets a cache control marker
 - Repeated prefixes (system prompt + static context) are cached by Anthropic
 
-!!! tip
-    Prompt caching is most effective when the system prompt and retrieval
-    context are stable across requests. Enable it for production workloads
-    where you send many requests with the same prefix.
+:::tip
+Prompt caching is most effective when the system prompt and retrieval
+context are stable across requests. Enable it for production workloads
+where you send many requests with the same prefix.
+:::
 
 ### Output Structure
 
@@ -106,11 +107,12 @@ Retrieval content is placed in `user` role messages, not `system`. This prevents
 prompt injection from untrusted retrieval sources from gaining system-level
 authority.
 
-!!! warning
-    Content from memory and retrieval items is inserted verbatim without
-    sanitization. If these items originate from untrusted sources (user-supplied
-    documents, web scrapes), they may contain prompt injection payloads.
-    Implement content validation or filtering before items enter the pipeline.
+:::caution
+Content from memory and retrieval items is inserted verbatim without
+sanitization. If these items originate from untrusted sources (user-supplied
+documents, web scrapes), they may contain prompt injection payloads.
+Implement content validation or filtering before items enter the pipeline.
+:::
 
 ## GenericTextFormatter
 
@@ -175,10 +177,11 @@ The `Formatter` protocol requires:
 | `format_type` | `property -> str` | Identifier (e.g. `"anthropic"`, `"openai"`) |
 | `format(window)` | `method -> str \| dict` | Converts `ContextWindow` to output |
 
-!!! note
-    `Formatter` is a PEP 544 `Protocol` -- no inheritance required. Any class
-    with matching `format_type` and `format()` signatures satisfies it via
-    structural subtyping.
+:::note
+`Formatter` is a PEP 544 `Protocol` -- no inheritance required. Any class
+with matching `format_type` and `format()` signatures satisfies it via
+structural subtyping.
+:::
 
 ## Choosing a Formatter
 

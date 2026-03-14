@@ -44,8 +44,9 @@ reranker = CohereReranker(rerank_fn=cohere_rerank, top_k=10)
 
 Local cross-encoder reranking using `flashrank`. The model is lazily loaded.
 
-!!! warning
-    Requires: `pip install astro-anchor[flashrank]`
+:::caution
+Requires: `pip install astro-anchor[flashrank]`
+:::
 
 ```python
 from anchor.retrieval import FlashRankReranker
@@ -78,9 +79,10 @@ pipeline = RerankerPipeline(rerankers=[cross_encoder, cohere_reranker], top_k=5)
 results = pipeline.rerank(query, items)
 ```
 
-!!! tip
-    Place cheaper rerankers first (e.g., `FlashRankReranker`) to reduce the
-    candidate set before expensive API-based rerankers (`CohereReranker`).
+:::tip
+Place cheaper rerankers first (e.g., `FlashRankReranker`) to reduce the
+candidate set before expensive API-based rerankers (`CohereReranker`).
+:::
 
 ---
 
@@ -117,9 +119,10 @@ hybrid = AsyncHybridRetriever(retrievers=[ret_a, ret_b], weights=[0.7, 0.3], k=6
 results = await hybrid.aretrieve(query, top_k=10)
 ```
 
-!!! note
-    Failed sub-retrievers are logged and skipped. If all fail, an empty list
-    is returned.
+:::note
+Failed sub-retrievers are logged and skipped. If all fail, an empty list
+is returned.
+:::
 
 ### Async Rerankers
 
@@ -206,9 +209,10 @@ Wraps any router and a mapping of named retrievers.
 | `retrievers` | `dict[str, Retriever]` | Mapping of route names to retrievers. |
 | `default_retriever` | `str \| None` | Fallback retriever name if route not found in `retrievers`. |
 
-!!! warning
-    If the route maps to an unknown retriever and no `default_retriever` is
-    configured, `RetrieverError` is raised.
+:::caution
+If the route maps to an unknown retriever and no `default_retriever` is
+configured, `RetrieverError` is raised.
+:::
 
 ---
 

@@ -60,9 +60,10 @@ print(f"Found {len(result.window.items)} context items")
 print(f"Used {result.window.used_tokens}/{result.window.max_tokens} tokens")
 ```
 
-!!! info "Bring your own embeddings"
-    anchor never calls an embedding provider directly. You supply the
-    `embed_fn` and can use OpenAI, Cohere, local models, or anything else.
+:::note[Bring your own embeddings]
+anchor never calls an embedding provider directly. You supply the
+`embed_fn` and can use OpenAI, Cohere, local models, or anything else.
+:::
 
 ---
 
@@ -113,9 +114,10 @@ pipeline = (
 )
 ```
 
-!!! note
-    BM25 sparse retrieval requires the optional `bm25` extra:
-    `pip install astro-anchor[bm25]`
+:::note
+BM25 sparse retrieval requires the optional `bm25` extra:
+`pip install astro-anchor[bm25]`
+:::
 
 ---
 
@@ -137,11 +139,12 @@ pipeline.with_formatter(OpenAIFormatter())
 pipeline.with_formatter(GenericTextFormatter())
 ```
 
-!!! tip
-    `with_formatter()` returns the pipeline, so you can chain it:
-    ```python
-    result = pipeline.with_formatter(AnthropicFormatter()).build("Hello")
-    ```
+:::tip
+`with_formatter()` returns the pipeline, so you can chain it:
+```python
+result = pipeline.with_formatter(AnthropicFormatter()).build("Hello")
+```
+:::
 
 ---
 
@@ -181,10 +184,11 @@ Three preset factories are available:
 - **`default_agent_budget(max_tokens)`** -- Agentic apps. Includes a 15% tool
   allocation and balances across all sources.
 
-!!! warning
-    The `reserve_tokens` field (15% by default) is subtracted from `max_tokens`
-    before any items are placed. Make sure your pipeline's `max_tokens`
-    is large enough to leave room after the reservation.
+:::caution
+The `reserve_tokens` field (15% by default) is subtracted from `max_tokens`
+before any items are placed. Make sure your pipeline's `max_tokens`
+is large enough to leave room after the reservation.
+:::
 
 ### Custom budgets
 
@@ -247,9 +251,10 @@ def enrich(items: list[ContextItem], query: QueryBundle) -> list[ContextItem]:
     return items
 ```
 
-!!! note
-    Passing an async function to `@pipeline.step` raises a `TypeError`.
-    Use `@pipeline.async_step` for async functions (see below).
+:::note
+Passing an async function to `@pipeline.step` raises a `TypeError`.
+Use `@pipeline.async_step` for async functions (see below).
+:::
 
 ---
 
@@ -287,11 +292,10 @@ def filter_results(items: list[ContextItem], query: QueryBundle) -> list[Context
 result = asyncio.run(pipeline.abuild("What is context engineering?"))
 ```
 
-!!! warning
-    If your pipeline contains **any** async steps, you **must** use `abuild()`.
-    Calling `build()` on a pipeline with async steps will raise an error.
-
-You can also use `@pipeline.async_step` with keyword arguments:
+:::caution
+If your pipeline contains **any** async steps, you **must** use `abuild()`.
+Calling `build()` on a pipeline with async steps will raise an error.
+:::You can also use `@pipeline.async_step` with keyword arguments:
 
 ```python
 @pipeline.async_step(name="db-lookup", on_error="skip")
@@ -342,9 +346,10 @@ pipeline = ContextPipeline(max_tokens=8192).add_step(
 result = pipeline.build("What causes memory leaks in Python?")
 ```
 
-!!! note
-    anchor never calls an LLM directly. You provide the generation
-    function (`generate_fn`) and the transformers handle orchestration.
+:::note
+anchor never calls an LLM directly. You provide the generation
+function (`generate_fn`) and the transformers handle orchestration.
+:::
 
 ### Other transformers
 
@@ -414,15 +419,17 @@ The `diagnostics` dictionary contains the following fields:
 | `failed_step` | `str` | Step that caused a pipeline failure |
 | `query_enriched` | `bool` | Whether query enrichment was applied |
 
-!!! tip
-    A `token_utilization` close to 1.0 means you are making good use of your
-    context window. If it is consistently low, consider increasing `top_k` on
-    your retriever steps or lowering `max_tokens`.
+:::tip
+A `token_utilization` close to 1.0 means you are making good use of your
+context window. If it is consistently low, consider increasing `top_k` on
+your retriever steps or lowering `max_tokens`.
+:::
 
-!!! warning
-    If `items_overflow` is high, important context may be getting dropped.
-    Consider increasing `max_tokens`, tuning per-source budgets, or filtering
-    low-quality items earlier in the pipeline.
+:::caution
+If `items_overflow` is high, important context may be getting dropped.
+Consider increasing `max_tokens`, tuning per-source budgets, or filtering
+low-quality items earlier in the pipeline.
+:::
 
 ---
 
@@ -455,9 +462,10 @@ of lower priority items.
 | 5 | Retrieval (default) | RAG results from retrievers |
 | 1--4 | Custom | Low-priority supplementary context |
 
-!!! info
-    The priority system works together with token budgets. Within a single
-    source category, items are ordered by priority first, then by score.
+:::note
+The priority system works together with token budgets. Within a single
+source category, items are ordered by priority first, then by score.
+:::
 
 ---
 
