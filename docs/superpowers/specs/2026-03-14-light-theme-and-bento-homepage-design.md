@@ -6,10 +6,10 @@
 
 ## Overview
 
-Two independent workstreams for the astro-docs site:
+Two workstreams for the astro-docs site (Workstream 1 must be completed first as Workstream 2 depends on its CSS variables):
 
 1. **Light theme** — Add a `:root[data-theme='light']` block to `custom.css` that mirrors astro-webpage's "Clean Slate" palette, fixing the broken light mode across the entire site.
-2. **Bento grid homepage** — Replace the current minimal Starlight splash page with a custom Astro page (`src/pages/index.astro`) featuring a project showcase in a bento grid layout, with GitHub repo metadata fetched at build time.
+2. **Bento grid homepage** — Replace the current minimal Starlight splash page with a custom Astro page (`src/pages/index.astro`) featuring a project showcase in a bento grid layout, with GitHub repo metadata fetched at build time. Depends on Workstream 1's CSS variables for theme-aware card styling.
 
 ## Workstream 1: Light Theme
 
@@ -28,26 +28,37 @@ Add a `:root[data-theme='light']` block mirroring astro-webpage's light palette 
 | `--sl-color-bg` | `#020810` | `#FAFAF8` |
 | `--sl-color-bg-nav` | `#0a1420` | `#ECEEE9` |
 | `--sl-color-bg-sidebar` | `#0a1420` | `#ECEEE9` |
+| `--sl-color-accent-low` | `#0f2847` | `#DBEAFE` |
 | `--sl-color-accent` | `#3b82f6` | `#1D4ED8` |
 | `--sl-color-accent-high` | `#93c5fd` | `#2563EB` |
 | `--sl-color-text` | `#e8ecf0` | `#0F172A` |
-| `--sl-color-text-accent` | `#93c5fd` | `#1D4ED8` |
+| `--sl-color-text-accent` | `#3b82f6` | `#1D4ED8` |
+| `--sl-color-text-invert` | `#020810` | `#FAFAF8` |
 
 **Gray scale (7 levels):**
 
-| Level | Dark | Light |
+| Level | Dark (existing) | Light (proposed) |
 |---|---|---|
 | gray-1 | `#8896a4` | `#64748B` |
-| gray-2 | `#6b7a88` | `#7A8A9B` |
-| gray-3 | `#4e5e6c` | `#94A3B8` |
-| gray-4 | `#334250` | `#B0BCCB` |
-| gray-5 | `#1c2c3a` | `#CBD5E1` |
-| gray-6 | `#0e1824` | `#E2E8F0` |
+| gray-2 | `#4a5568` | `#7A8A9B` |
+| gray-3 | `#2d3748` | `#94A3B8` |
+| gray-4 | `#1a202c` | `#B0BCCB` |
+| gray-5 | `#0f1118` | `#CBD5E1` |
+| gray-6 | `#0a0e14` | `#E2E8F0` |
 | gray-7 | `#020810` | `#FAFAF8` |
 
-**Borders:** Change from `rgba(255,255,255, 0.06–0.10)` to `rgba(0,0,0, 0.06–0.10)`.
+**Borders:**
 
-**Code blocks:** Change from `rgba(255,255,255, 0.03)` to `rgba(0,0,0, 0.03)`.
+| Variable | Dark (existing) | Light (proposed) |
+|---|---|---|
+| `--sl-color-hairline-light` | `rgba(255, 255, 255, 0.06)` | `rgba(0, 0, 0, 0.06)` |
+| `--sl-color-hairline` | `rgba(255, 255, 255, 0.1)` | `rgba(0, 0, 0, 0.1)` |
+
+**Code blocks:**
+
+| Variable | Dark (existing) | Light (proposed) |
+|---|---|---|
+| `--sl-color-bg-inline-code` | `rgba(255, 255, 255, 0.06)` | `rgba(0, 0, 0, 0.06)` |
 
 **Scrollbar:** Invert track/thumb colors for light background.
 
@@ -76,7 +87,7 @@ src/
 ├── data/
 │   └── projects.ts              # Static project config (new)
 ├── content/docs/
-│   └── index.mdx                # Remove or redirect (modify)
+│   └── index.mdx                # Delete — replaced by src/pages/index.astro
 └── styles/
     └── custom.css               # Light theme additions (modify)
 ```
@@ -145,7 +156,7 @@ Structure:
 2. **Project grid** — `<ProjectGrid />` component with bento layout
 3. **Footer** — Minimal branding ("Built with Starlight · Deployed on Vercel")
 
-The page imports Starlight's `StarlightPage` layout (or a minimal custom layout) to inherit the site header, theme toggle, and global styles.
+The page imports Starlight's `StarlightPage` component to inherit the site header, theme toggle, and global styles. This is Starlight's official API for custom pages outside the content collection.
 
 ### Bento Grid Layout (`src/components/ProjectGrid.astro`)
 
@@ -167,7 +178,7 @@ CSS Grid with 6 columns on desktop, 1 column on mobile:
 
 - **Featured cards:** `grid-column: span 4` — large card with full metadata
 - **Regular cards:** `grid-column: span 2` — compact card
-- **Placeholder cards:** "Coming Soon" with dashed border, shown when fewer than 4 projects exist
+- **Placeholder cards:** "Coming Soon" with dashed border, shown to fill remaining grid slots when fewer than 4 projects exist. Layout: first row is always featured (span-4) + regular (span-2); second row mirrors (span-2 + span-4). Placeholders fill any slots not occupied by real projects.
 
 ### Project Card (`src/components/ProjectCard.astro`)
 
@@ -186,7 +197,7 @@ Two variants driven by the `featured` flag:
 - Description (1 line, truncated)
 - Language dot
 
-**Hover:** Border color transitions to `border-hover` opacity.
+**Hover:** Border color transitions from `var(--sl-color-hairline)` to `var(--sl-color-hairline-light)` with increased opacity (0.06 → 0.15 dark, 0.1 → 0.2 light). Transition: `border-color 0.2s ease`.
 
 ### Icon System (`src/components/ProjectIcon.astro`)
 
@@ -201,7 +212,7 @@ Renders inline SVGs based on a key. No external icon library.
 **Initial icons:**
 - `anchor` — anchor symbol (circle + vertical line + arc)
 
-Future project icons are added to the switch/map as projects are added.
+Future project icons are added to the switch/map as projects are added. Unknown icon keys render a default "box" icon (generic package/cube) as a fallback.
 
 **Stat icons (stars, forks):** Also inline SVGs, matching GitHub's visual style.
 
