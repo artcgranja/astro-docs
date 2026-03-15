@@ -1,0 +1,95 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { projects } from '../data/projects';
+import { fetchRepoData } from '../lib/github';
+import type { GitHubRepoData } from '../lib/github';
+
+// Fetch GitHub data for all projects at build time
+const repoDataMap = new Map<string, GitHubRepoData>();
+for (const project of projects) {
+  const data = await fetchRepoData(project.githubRepo);
+  repoDataMap.set(project.slug, data);
+}
+
+// Fill grid to 4 slots minimum with placeholder cards.
+// Grid pattern: row 1 = span-4 + span-2, row 2 = span-2 + span-4.
+// Placeholders alternate wide/narrow to fill remaining slots after real projects.
+const totalSlots = 4;
+const placeholderCount = Math.max(0, totalSlots - projects.length);
+---
+
+<section class="project-grid-section" id="projects">
+  <div class="project-grid">
+    {projects.map((project) => (
+      <ProjectCard project={project} repoData={repoDataMap.get(project.slug)!} />
+    ))}
+
+    {Array.from({ length: placeholderCount }).map((_, i) => (
+      <div class:list={['placeholder-card', { wide: i % 2 === (projects.length % 2 === 0 ? 0 : 1) }]}>
+        <div class="placeholder-icon">
+          <span>+</span>
+        </div>
+        <span class="placeholder-text">Coming Soon</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .project-grid-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+  }
+
+  .placeholder-card {
+    grid-column: span 2;
+    background: var(--sl-color-bg-nav);
+    border: 2px dashed var(--sl-color-hairline);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 160px;
+  }
+  .placeholder-card.wide {
+    grid-column: span 4;
+  }
+  .placeholder-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 2px dashed var(--sl-color-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .placeholder-icon span {
+    font-size: 20px;
+    color: var(--sl-color-gray-3);
+  }
+  .placeholder-text {
+    font-size: 14px;
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+    .placeholder-card,
+    .placeholder-card.wide {
+      grid-column: span 1;
+    }
+  }
+</style>
