@@ -1,0 +1,106 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Astro Intelligence',
+    template: 'splash',
+    hero: { tagline: '' },
+    pagefind: false,
+  }}
+>
+  <div class="homepage">
+    <!-- Hero -->
+    <section class="hero">
+      <img src="/favicon.svg" alt="Astro Intelligence" class="hero-logo" />
+      <h1 class="hero-title">Astro Intelligence</h1>
+      <p class="hero-tagline">Open-source tools for context-engineered AI systems</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">Explore Projects</a>
+        <a href="https://github.com/artcgranja" class="btn-outline" target="_blank" rel="noopener">GitHub &#8599;</a>
+      </div>
+    </section>
+
+    <!-- Project Grid -->
+    <ProjectGrid />
+
+    <!-- Footer -->
+    <footer class="homepage-footer">
+      <p>Built with Starlight &middot; Deployed on Vercel</p>
+    </footer>
+  </div>
+</StarlightPage>
+
+<style>
+  .homepage {
+    width: 100%;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+  }
+  .hero-logo {
+    height: 48px;
+    width: auto;
+    margin-bottom: 1rem;
+  }
+  .hero-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0 0 0.5rem;
+    color: var(--sl-color-text);
+  }
+  .hero-tagline {
+    font-size: 1rem;
+    color: var(--sl-color-gray-1);
+    margin: 0 0 1.5rem;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .btn-primary {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  .btn-outline {
+    border: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-text);
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .btn-outline:hover {
+    border-color: var(--sl-color-gray-1);
+  }
+
+  /* Footer */
+  .homepage-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--sl-color-hairline-light);
+  }
+  .homepage-footer p {
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+  }
+</style>
