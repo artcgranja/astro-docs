@@ -90,7 +90,10 @@ const langColor = langColors[repoData.language] ?? '#8896a4';
     transition: border-color 0.2s ease;
   }
   .project-card:hover {
-    border-color: rgba(128, 128, 128, 0.2);
+    border-color: rgba(128, 128, 128, 0.15);
+  }
+  :global(:root[data-theme='light']) .project-card:hover {
+    border-color: rgba(0, 0, 0, 0.2);
   }
   .project-card.featured {
     grid-column: span 4;
@@ -176,15 +179,15 @@ const langColor = langColors[repoData.language] ?? '#8896a4';
   }
   .badge {
     padding: 4px 12px;
-    border-radius: 20px;
+    border-radius: 9999px;
     font-size: 11px;
     color: var(--sl-color-gray-1);
     border: 1px solid var(--sl-color-hairline);
   }
-  :root[data-theme='light'] .badge {
+  :global(:root[data-theme='light']) .badge {
     background: rgba(0, 0, 0, 0.04);
   }
-  :root:not([data-theme='light']) .badge {
+  :global(:root:not([data-theme='light'])) .badge {
     background: rgba(255, 255, 255, 0.04);
   }
 
