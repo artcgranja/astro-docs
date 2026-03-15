@@ -44,6 +44,40 @@
   --sl-color-bg-inline-code: rgba(255, 255, 255, 0.06);
 }
 
+/* === Astro Intelligence Light Theme === */
+:root[data-theme='light'] {
+  /* Colors — Astro Intelligence clean slate palette */
+  --sl-color-bg: #FAFAF8;
+  --sl-color-bg-nav: #ECEEE9;
+  --sl-color-bg-sidebar: #ECEEE9;
+
+  /* Accent */
+  --sl-color-accent-low: #DBEAFE;
+  --sl-color-accent: #1D4ED8;
+  --sl-color-accent-high: #2563EB;
+  --sl-color-text-accent: #1D4ED8;
+
+  /* Text */
+  --sl-color-text: #0F172A;
+  --sl-color-text-invert: #FAFAF8;
+
+  /* Grays */
+  --sl-color-gray-1: #64748B;
+  --sl-color-gray-2: #7A8A9B;
+  --sl-color-gray-3: #94A3B8;
+  --sl-color-gray-4: #B0BCCB;
+  --sl-color-gray-5: #CBD5E1;
+  --sl-color-gray-6: #E2E8F0;
+  --sl-color-gray-7: #FAFAF8;
+
+  /* Borders */
+  --sl-color-hairline-light: rgba(0, 0, 0, 0.06);
+  --sl-color-hairline: rgba(0, 0, 0, 0.1);
+
+  /* Code blocks */
+  --sl-color-bg-inline-code: rgba(0, 0, 0, 0.06);
+}
+
 /* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -61,6 +95,20 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
+}
+
+/* Light mode scrollbar */
+:root[data-theme='light'] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:root[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 3px;
+}
+
+:root[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
 }
 
 /* Nav logo sizing */
