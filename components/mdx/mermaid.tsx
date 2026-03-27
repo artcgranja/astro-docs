@@ -75,18 +75,37 @@ export function Mermaid({ chart }: { chart: string }) {
 
   if (error) {
     return (
-      <pre
+      <div
         style={{
-          padding: '1rem',
           borderRadius: '0.5rem',
-          background: '#0a1420',
-          color: '#8896a4',
-          overflow: 'auto',
-          fontSize: '0.875rem',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          overflow: 'hidden',
         }}
       >
-        <code>{chart}</code>
-      </pre>
+        <div
+          style={{
+            padding: '0.5rem 1rem',
+            background: 'rgba(239, 68, 68, 0.1)',
+            color: '#f87171',
+            fontSize: '0.8rem',
+            fontWeight: 500,
+          }}
+        >
+          Diagram failed to render
+        </div>
+        <pre
+          style={{
+            padding: '1rem',
+            margin: 0,
+            background: '#0a1420',
+            color: '#8896a4',
+            overflow: 'auto',
+            fontSize: '0.875rem',
+          }}
+        >
+          <code>{chart}</code>
+        </pre>
+      </div>
     );
   }
 

@@ -15,31 +15,36 @@ if [ ! -d "$CONTENT_DIR" ]; then
   exit 1
 fi
 
+# Cross-platform sed: macOS uses -i '', GNU/Linux uses -i
+SED_INPLACE=(sed -i)
+if [[ "$(uname)" == "Darwin" ]]; then
+  SED_INPLACE=("${SED_INPLACE[@]}")
+fi
+
 echo "Converting MkDocs syntax in $CONTENT_DIR ..."
 
-# Find all markdown files
-FILES=$(find "$CONTENT_DIR" -name '*.md' -o -name '*.mdx' | sort)
 MODIFIED=0
 
-for file in $FILES; do
+# Use find with -print0 to handle filenames with spaces
+while IFS= read -r -d '' file; do
   CHANGED=false
 
   # 1. Remove icon shortcodes (:material-xxx: and :octicons-xxx:)
   if grep -qE ':(material|octicons)-[a-z0-9-]+:' "$file" 2>/dev/null; then
-    sed -i '' -E 's/:(material|octicons)-[a-z0-9-]+://g' "$file"
+    "${SED_INPLACE[@]}" -E 's/:(material|octicons)-[a-z0-9-]+://g' "$file"
     CHANGED=true
   fi
 
   # 2. Remove MkDocs icon frontmatter (icon: material/xxx)
   if grep -q '^icon: material/' "$file" 2>/dev/null; then
-    sed -i '' '/^icon: material\//d' "$file"
+    "${SED_INPLACE[@]}" '/^icon: material\//d' "$file"
     CHANGED=true
   fi
 
   # 3. Remove MkDocs hide frontmatter (hide: - toc, hide: - navigation)
   # Removes "hide:" line and subsequent "  - toc" / "  - navigation" lines
   if grep -q '^hide:' "$file" 2>/dev/null; then
-    sed -i '' '/^hide:$/,/^[^ ]/{/^hide:$/d; /^  - /d;}' "$file"
+    "${SED_INPLACE[@]}" '/^hide:$/,/^[^ ]/{/^hide:$/d; /^  - /d;}' "$file"
     CHANGED=true
   fi
 
@@ -96,42 +101,42 @@ PYEOF
 
   # 5. Remove <div class="grid cards" markdown> and </div> wrappers
   if grep -q '<div class="grid cards"' "$file" 2>/dev/null; then
-    sed -i '' '/<div class="grid cards"/d' "$file"
+    "${SED_INPLACE[@]}" '/<div class="grid cards"/d' "$file"
     CHANGED=true
   fi
 
   # 6. Remove <div class="hero" markdown> and matching </div>
   if grep -q '<div class="hero"' "$file" 2>/dev/null; then
-    sed -i '' '/<div class="hero"/d' "$file"
+    "${SED_INPLACE[@]}" '/<div class="hero"/d' "$file"
     CHANGED=true
   fi
 
   # 7. Remove closing </div> that were wrapping grid/hero blocks
   # Only remove standalone </div> lines (no other content)
   if grep -qE '^\s*</div>\s*$' "$file" 2>/dev/null; then
-    sed -i '' '/^[[:space:]]*<\/div>[[:space:]]*$/d' "$file"
+    "${SED_INPLACE[@]}" '/^[[:space:]]*<\/div>[[:space:]]*$/d' "$file"
     CHANGED=true
   fi
 
   # 8. Remove markdown attribute from remaining divs
   if grep -q ' markdown>' "$file" 2>/dev/null; then
-    sed -i '' 's/ markdown>/>/g' "$file"
+    "${SED_INPLACE[@]}" 's/ markdown>/>/g' "$file"
     CHANGED=true
   fi
   if grep -q ' markdown=' "$file" 2>/dev/null; then
-    sed -i '' 's/ markdown="[^"]*"//g' "$file"
+    "${SED_INPLACE[@]}" 's/ markdown="[^"]*"//g' "$file"
     CHANGED=true
   fi
 
   # 9. Remove {: .class } attribute syntax
   if grep -qE '\{: *\.' "$file" 2>/dev/null; then
-    sed -i '' -E 's/\{: *\.[^}]*\}//g' "$file"
+    "${SED_INPLACE[@]}" -E 's/\{: *\.[^}]*\}//g' "$file"
     CHANGED=true
   fi
 
   # 10. Convert MkDocs tab syntax (=== "Tab") to heading sections
   if grep -q '=== "' "$file" 2>/dev/null; then
-    sed -i '' -E 's/^=== "(.+)"/#### \1/' "$file"
+    "${SED_INPLACE[@]}" -E 's/^=== "(.+)"/#### \1/' "$file"
     CHANGED=true
   fi
 
@@ -203,6 +208,6 @@ PYEOF
     MODIFIED=$((MODIFIED + 1))
     echo "  converted: $file"
   fi
-done
+done < <(find "$CONTENT_DIR" \( -name '*.md' -o -name '*.mdx' \) -print0 | sort -z)
 
 echo "Done. $MODIFIED file(s) modified."

@@ -29,6 +29,10 @@ jobs:
               echo "project=stick" >> "$GITHUB_OUTPUT"
               echo "docs_dir=docs" >> "$GITHUB_OUTPUT"
               ;;
+            *)
+              echo "ERROR: Unknown event type: ${EVENT_ACTION}"
+              exit 1
+              ;;
           esac
 
       - name: Clone source repo
@@ -44,6 +48,12 @@ jobs:
           DOCS_DIR="${{ steps.config.outputs.docs_dir }}"
           DEST="content/docs/${PROJECT}"
 
+          # Validate source docs exist before destructive operations
+          if [ ! -d "_source/${DOCS_DIR}" ]; then
+            echo "ERROR: Source docs directory '_source/${DOCS_DIR}' not found"
+            exit 1
+          fi
+
           rm -rf "${DEST}"
           mkdir -p "${DEST}"
 
@@ -53,6 +63,12 @@ jobs:
                     --exclude='stylesheets/' \
                     --exclude='.gitignore' \
                     "_source/${DOCS_DIR}/" "${DEST}/"
+
+          # Validate content was actually synced
+          if [ -z "$(ls -A "${DEST}")" ]; then
+            echo "ERROR: No files synced to ${DEST}"
+            exit 1
+          fi
 
           rm -rf _source
 
