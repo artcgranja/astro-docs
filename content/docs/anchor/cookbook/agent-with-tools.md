@@ -9,14 +9,13 @@ decorator and `SkillRegistry`.
 
 ---
 
-:::caution[LLM Provider Required]
-The `Agent` class requires at least one LLM provider SDK. The default
-provider is Anthropic: `pip install astro-anchor[anthropic]`. See the
-[LLM Providers Guide](../guides/llm-providers.md) for all supported
-providers. The tool creation and skill registration sections below run
-without any provider SDK. The `agent.chat()` call at the end requires
-a configured provider (e.g. `ANTHROPIC_API_KEY`).
-:::
+> [!CAUTION] LLM Provider Required
+> The `Agent` class requires at least one LLM provider SDK. The default
+> provider is Anthropic: `pip install astro-anchor[anthropic]`. See the
+> [LLM Providers Guide](../guides/llm-providers.md) for all supported
+> providers. The tool creation and skill registration sections below run
+> without any provider SDK. The `agent.chat()` call at the end requires
+> a configured provider (e.g. `ANTHROPIC_API_KEY`).
 
 ## Overview
 
@@ -356,19 +355,17 @@ else:
 | `"always"` | Tools available from the first API round |
 | `"on_demand"` | Advertised in discovery prompt, loaded when activated |
 
-:::tip[Tool Function Requirements]
-Tool functions must return `str`. The `@tool` decorator extracts the
-function name, docstring, and type hints to auto-generate the JSON
-Schema used by the LLM.
-:::
+> [!TIP] Tool Function Requirements
+> Tool functions must return `str`. The `@tool` decorator extracts the
+> function name, docstring, and type hints to auto-generate the JSON
+> Schema used by the LLM.
 
-:::note[Multi-Provider Agent]
-The `Agent` class supports any LLM provider via the `LLMProvider`
-protocol. Use `Agent(model="openai/gpt-4o")` or any other supported
-provider. Tools are converted to a provider-agnostic `ToolSchema` via
-`to_tool_schema()`. See the [LLM Providers Guide](../guides/llm-providers.md)
-for details.
-:::
+> [!NOTE] Multi-Provider Agent
+> The `Agent` class supports any LLM provider via the `LLMProvider`
+> protocol. Use `Agent(model="openai/gpt-4o")` or any other supported
+> provider. Tools are converted to a provider-agnostic `ToolSchema` via
+> `to_tool_schema()`. See the [LLM Providers Guide](../guides/llm-providers.md)
+> for details.
 
 ## Next Steps
 

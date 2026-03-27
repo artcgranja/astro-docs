@@ -270,17 +270,15 @@ items = ingester.ingest_directory(
 )
 ```
 
-:::tip[Chunk Size Guidelines]
-- Small chunks (100-200 tokens): better precision, more chunks to search
-- Large chunks (500-1000 tokens): more context per result, fewer chunks
-- Start with 256-512 tokens and adjust based on evaluation metrics
-:::
+> [!TIP] Chunk Size Guidelines
+> - Small chunks (100-200 tokens): better precision, more chunks to search
+> - Large chunks (500-1000 tokens): more context per result, fewer chunks
+> - Start with 256-512 tokens and adjust based on evaluation metrics
 
-:::caution[SemanticChunker Signature]
-`SemanticChunker` requires a batch embedding function with signature
-`(list[str]) -> list[list[float]]`, not the single-string `embed_fn`
-used by `DenseRetriever`.
-:::
+> [!CAUTION] SemanticChunker Signature
+> `SemanticChunker` requires a batch embedding function with signature
+> `(list[str]) -> list[list[float]]`, not the single-string `embed_fn`
+> used by `DenseRetriever`.
 
 ## Next Steps
 

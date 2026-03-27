@@ -364,10 +364,9 @@ memory = SlidingWindowMemory(max_tokens=4096, on_evict=promoter)
 
 **Returns:** A callable with signature `(list[ConversationTurn]) -> None`.
 
-:::note
-Errors inside the eviction promoter are logged but never propagated to
-prevent crashing the memory pipeline.
-:::
+> [!NOTE]
+> Errors inside the eviction promoter are logged but never propagated to
+> prevent crashing the memory pipeline.
 
 ---
 

@@ -190,10 +190,9 @@ encoder = CompositeEncoder(encoders={
 })
 ```
 
-:::caution
-`CompositeEncoder` raises `ValueError` if it encounters a modality with no
-registered encoder.
-:::
+> [!CAUTION]
+> `CompositeEncoder` raises `ValueError` if it encounters a modality with no
+> registered encoder.
 
 ## Table Parsers
 

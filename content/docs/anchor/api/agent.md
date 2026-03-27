@@ -52,10 +52,9 @@ class Agent:
 | `max_response_tokens` | `int` | `1024` | Max tokens in each API response |
 | `max_rounds` | `int` | `10` | Max tool-use rounds per `chat()` call |
 
-:::tip
-See the [LLM Providers Guide](../guides/llm-providers.md) for supported
-providers, installation, and fallback chain configuration.
-:::
+> [!TIP]
+> See the [LLM Providers Guide](../guides/llm-providers.md) for supported
+> providers, installation, and fallback chain configuration.
 
 ### Methods
 

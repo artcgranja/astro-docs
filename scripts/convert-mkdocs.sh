@@ -176,6 +176,33 @@ with open('$file', 'w') as f:
     CHANGED=true
   fi
 
+  # 12. Convert :::type[title] callouts to GitHub-style > [!TYPE]
+  if grep -q ':::' "$file" 2>/dev/null; then
+    python3 -c "
+import re
+type_map = {
+    'tip': 'TIP', 'note': 'NOTE', 'warning': 'WARNING',
+    'caution': 'CAUTION', 'danger': 'CAUTION', 'important': 'IMPORTANT',
+    'info': 'NOTE',
+}
+with open('$file', 'r') as f:
+    content = f.read()
+def replace_callout(match):
+    ct = type_map.get(match.group(1).lower(), 'NOTE')
+    title = match.group(2) or ''
+    body = match.group(3).strip()
+    header = f'> [!{ct}]'
+    if title:
+        header += f' {title}'
+    lines = [f'> {l}' if l.strip() else '>' for l in body.split('\n')]
+    return header + '\n' + '\n'.join(lines)
+content = re.sub(r':::(\w+)(?:\[([^\]]*)\])?\n(.*?):::', replace_callout, content, flags=re.DOTALL)
+with open('$file', 'w') as f:
+    f.write(content)
+"
+    CHANGED=true
+  fi
+
   if [ "$CHANGED" = true ]; then
     MODIFIED=$((MODIFIED + 1))
     echo "  converted: $file"

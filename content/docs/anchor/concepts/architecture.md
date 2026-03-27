@@ -280,11 +280,10 @@ async def add_db_results(items, query):
 result = await pipeline.abuild("search query")
 ```
 
-:::tip[When to use `abuild()`]
-Use `abuild()` whenever your pipeline includes at least one async step
-(database lookups, API calls, async rerankers). For pure in-memory
-pipelines, `build()` avoids the overhead of an event loop.
-:::
+> [!TIP] When to use `abuild()`
+> Use `abuild()` whenever your pipeline includes at least one async step
+> (database lookups, API calls, async rerankers). For pure in-memory
+> pipelines, `build()` avoids the overhead of an event loop.
 
 ## Callbacks
 
@@ -312,10 +311,9 @@ Available callback hooks:
 - `on_step_error(step_name, error)` -- fired when a step raises
 - `on_pipeline_end(result)` -- fired after the final `ContextResult` is assembled
 
-:::note
-Callback errors are swallowed and logged at WARNING level. A failing
-callback never breaks the pipeline.
-:::
+> [!NOTE]
+> Callback errors are swallowed and logged at WARNING level. A failing
+> callback never breaks the pipeline.
 
 ## See Also
 

@@ -163,11 +163,10 @@ for q in all_queries:
     print(f"  - {q.query_str}")
 ```
 
-:::note
-`QueryTransformPipeline` also supports `atransform()` for async execution.
-Transformers that implement `AsyncQueryTransformer` are called via
-`atransform`; others fall back to the synchronous `transform` method.
-:::
+> [!NOTE]
+> `QueryTransformPipeline` also supports `atransform()` for async execution.
+> Transformers that implement `AsyncQueryTransformer` are called via
+> `atransform`; others fall back to the synchronous `transform` method.
 
 ---
 
@@ -268,15 +267,13 @@ from anchor.pipeline import ContextPipeline
 pipeline = ContextPipeline(steps=[step])
 ```
 
-:::tip
-Combine `QueryTransformPipeline` with `query_transform_step` to chain
-multiple transformers and use the combined output for retrieval in a
-single pipeline step.
-:::
+> [!TIP]
+> Combine `QueryTransformPipeline` with `query_transform_step` to chain
+> multiple transformers and use the combined output for retrieval in a
+> single pipeline step.
 
-:::caution
-Each expanded query triggers a separate retrieval call. With
-`MultiQueryTransformer(num_queries=3)` you get 4 retrieval calls
-(original + 3 variations). Keep `top_k` and `num_queries` reasonable
-to control latency and cost.
-:::
+> [!CAUTION]
+> Each expanded query triggers a separate retrieval call. With
+> `MultiQueryTransformer(num_queries=3)` you get 4 retrieval calls
+> (original + 3 variations). Keep `top_k` and `num_queries` reasonable
+> to control latency and cost.

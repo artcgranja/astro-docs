@@ -264,24 +264,21 @@ for metric_name, comparison in ab_result.per_metric_comparison.items():
 - **winner = "a" or "b"**: that retriever performed significantly better
 - **per_metric_comparison**: shows exactly where each retriever wins
 
-:::tip[Sample Size for A/B Tests]
-For reliable statistical significance, use at least 20-30 evaluation
-samples. Fewer samples may produce high p-values even when there is
-a real difference.
-:::
+> [!TIP] Sample Size for A/B Tests
+> For reliable statistical significance, use at least 20-30 evaluation
+> samples. Fewer samples may produce high p-values even when there is
+> a real difference.
 
-:::note[No LLM Required for Retrieval Metrics]
-`RetrievalMetricsCalculator` is purely computational -- it compares
-retrieved item IDs against known relevant IDs. No API key or LLM
-call is needed.
-:::
+> [!NOTE] No LLM Required for Retrieval Metrics
+> `RetrievalMetricsCalculator` is purely computational -- it compares
+> retrieved item IDs against known relevant IDs. No API key or LLM
+> call is needed.
 
-:::caution[Paired T-Test Approximation]
-The A/B test uses a normal approximation for the t-test statistic,
-which is conservative for small sample sizes. For production-grade
-significance testing with small datasets, consider using `scipy`
-for exact t-distribution p-values.
-:::
+> [!CAUTION] Paired T-Test Approximation
+> The A/B test uses a normal approximation for the t-test statistic,
+> which is conservative for small sample sizes. For production-grade
+> significance testing with small datasets, consider using `scipy`
+> for exact t-distribution p-values.
 
 ## Next Steps
 

@@ -49,11 +49,10 @@ for chunk in agent.chat("What is context engineering?"):
     print(chunk, end="", flush=True)
 ```
 
-:::note
-The Agent requires at least one LLM provider SDK. The default is Anthropic:
-`pip install astro-anchor[anthropic]`. See the
-[LLM Providers Guide](llm-providers.md) for all supported providers.
-:::
+> [!NOTE]
+> The Agent requires at least one LLM provider SDK. The default is Anthropic:
+> `pip install astro-anchor[anthropic]`. See the
+> [LLM Providers Guide](llm-providers.md) for all supported providers.
 
 ## Constructor
 
@@ -207,11 +206,10 @@ def search_kb(query: str, max_results: int = 5) -> str:
     return f"Found {max_results} results for: {query}"
 ```
 
-:::tip
-When you provide an `input_model`, validation uses full Pydantic validation
-instead of basic JSON Schema type checking. This gives you richer constraints
-like `ge=`, `le=`, `pattern=`, etc.
-:::
+> [!TIP]
+> When you provide an `input_model`, validation uses full Pydantic validation
+> instead of basic JSON Schema type checking. This gives you richer constraints
+> like `ge=`, `le=`, `pattern=`, etc.
 
 ### Three Tiers of Tool Creation
 
@@ -347,10 +345,9 @@ The memory skill provides:
 | `update_fact` | Update an existing fact by ID |
 | `delete_fact` | Delete an outdated fact by ID |
 
-:::caution
-The memory skill's `activation` is `"always"` by default. All four tools
-are available from the first round.
-:::
+> [!CAUTION]
+> The memory skill's `activation` is `"always"` by default. All four tools
+> are available from the first round.
 
 ### rag_skill
 
@@ -373,10 +370,9 @@ making this **agentic RAG** -- retrieval timing is model-controlled.
 | `retriever` | object | Any object with `retrieve(query, top_k)` |
 | `embed_fn` | `Callable[[str], list[float]] \| None` | Optional embedding function |
 
-:::note
-The RAG skill's `activation` is `"on_demand"`. The agent must call
-`activate_skill("rag")` before `search_docs` becomes available.
-:::
+> [!NOTE]
+> The RAG skill's `activation` is `"on_demand"`. The agent must call
+> `activate_skill("rag")` before `search_docs` becomes available.
 
 ## Putting It All Together
 

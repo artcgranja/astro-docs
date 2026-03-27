@@ -48,10 +48,9 @@ agent = Agent(model="gemini/gemini-2.0-flash")
 agent = Agent(model="ollama/llama3")
 ```
 
-:::note
-Each provider requires its own SDK. See [Installation](#installation) for
-the optional extras.
-:::
+> [!NOTE]
+> Each provider requires its own SDK. See [Installation](#installation) for
+> the optional extras.
 
 ## Installation
 
@@ -83,10 +82,9 @@ pip install astro-anchor[anthropic,openai,gemini]
 | OpenRouter | `openrouter/` | `openai` | `[openai]` | `OPENROUTER_API_KEY` |
 | LiteLLM | `litellm/` | `litellm` | `[litellm]` | (varies) |
 
-:::tip
-Grok, OpenRouter, and standard OpenAI all share the `openai` SDK. Installing
-`astro-anchor[openai]` covers all three.
-:::
+> [!TIP]
+> Grok, OpenRouter, and standard OpenAI all share the `openai` SDK. Installing
+> `astro-anchor[openai]` covers all three.
 
 ## Model String Format
 
@@ -123,11 +121,10 @@ Fallback behavior depends on the call method:
 | `invoke` / `ainvoke` | Any transient error triggers the next provider |
 | `stream` / `astream` | Fallback only before the first chunk is yielded |
 
-:::caution
-Mid-stream errors propagate directly -- once streaming has started, the
-agent cannot transparently switch providers without losing already-yielded
-content.
-:::
+> [!CAUTION]
+> Mid-stream errors propagate directly -- once streaming has started, the
+> agent cannot transparently switch providers without losing already-yielded
+> content.
 
 ## Injecting a Pre-Built Provider
 
@@ -197,11 +194,10 @@ Once registered, the prefix routes automatically:
 agent = Agent(model="my_provider/my-model")
 ```
 
-:::note
-`BaseLLMProvider` handles retries, error mapping, and the public
-`invoke`/`stream`/`ainvoke`/`astream` API. Subclasses only implement the
-`_do_*` methods with provider-specific SDK calls.
-:::
+> [!NOTE]
+> `BaseLLMProvider` handles retries, error mapping, and the public
+> `invoke`/`stream`/`ainvoke`/`astream` API. Subclasses only implement the
+> `_do_*` methods with provider-specific SDK calls.
 
 ## Error Handling
 

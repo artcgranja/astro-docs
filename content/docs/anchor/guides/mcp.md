@@ -29,10 +29,9 @@ External MCP Servers          anchor Agent          External MCP Clients
   AgentTool instances         MCP tools/resources/prompts
 ```
 
-:::note
-The MCP bridge requires the `fastmcp` package.
-Install with: `pip install astro-anchor[mcp]`
-:::
+> [!NOTE]
+> The MCP bridge requires the `fastmcp` package.
+> Install with: `pip install astro-anchor[mcp]`
 
 ## Client Bridge
 

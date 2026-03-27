@@ -39,14 +39,13 @@ print(result.formatted_output)
 3. **`build()`** packs everything that fits into a `ContextResult` -- ready to
    send to any LLM.
 
-:::tip[String shorthand]
-`build()` also accepts a plain string. These two calls are equivalent:
-
-```python
-result = pipeline.build("It should sort a list")
-result = pipeline.build(QueryBundle(query_str="It should sort a list"))
-```
-:::
+> [!TIP] String shorthand
+> `build()` also accepts a plain string. These two calls are equivalent:
+>
+> ```python
+> result = pipeline.build("It should sort a list")
+> result = pipeline.build(QueryBundle(query_str="It should sort a list"))
+> ```
 
 ## What's next?
 

@@ -100,7 +100,6 @@ Run the test suite to make sure everything is working:
 pytest
 ```
 
-:::tip[Next step]
-Head over to the [Quickstart](quickstart.md) to build your first pipeline
-in under 30 seconds.
-:::
+> [!TIP] Next step
+> Head over to the [Quickstart](quickstart.md) to build your first pipeline
+> in under 30 seconds.

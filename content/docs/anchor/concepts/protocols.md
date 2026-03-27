@@ -27,11 +27,10 @@ class Retriever(Protocol):
 Any object with a `retrieve(query, top_k)` method satisfies the `Retriever`
 protocol -- even if it has never seen the protocol definition.
 
-:::note[PEP 544]
-Protocols were introduced in Python 3.8 via PEP 544. They are part of
-the `typing` module and are fully supported by mypy, pyright, and other
-type checkers.
-:::
+> [!NOTE] PEP 544
+> Protocols were introduced in Python 3.8 via PEP 544. They are part of
+> the `typing` module and are fully supported by mypy, pyright, and other
+> type checkers.
 
 ## Why Protocols Over Inheritance?
 
@@ -193,13 +192,12 @@ pipeline = ContextPipeline(max_tokens=8192).add_step(retriever_step("keyword", r
 result = pipeline.build("What is RAG?")
 ```
 
-:::tip[Runtime checking]
-All protocols are `@runtime_checkable`, so you can verify at runtime:
-```python
-from anchor.protocols import Retriever
-assert isinstance(retriever, Retriever)  # True
-```
-:::
+> [!TIP] Runtime checking
+> All protocols are `@runtime_checkable`, so you can verify at runtime:
+> ```python
+> from anchor.protocols import Retriever
+> assert isinstance(retriever, Retriever)  # True
+> ```
 
 ## Async Protocol Pairs
 
@@ -216,11 +214,10 @@ method name (prefixed with `a`) to avoid ambiguity:
 Use the sync variant with `pipeline.build()` and the async variant with
 `pipeline.abuild()`.
 
-:::caution[Sync steps in async pipelines]
-`abuild()` can run both sync and async steps -- sync functions are
-called directly. But `build()` cannot run async steps and will raise
-`TypeError` if it encounters one.
-:::
+> [!CAUTION] Sync steps in async pipelines
+> `abuild()` can run both sync and async steps -- sync functions are
+> called directly. But `build()` cannot run async steps and will raise
+> `TypeError` if it encounters one.
 
 ## See Also
 

@@ -107,10 +107,9 @@ cache.get("a")  # None
 cache.get("d")  # 4
 ```
 
-:::note
-Updating an existing key does not trigger eviction -- it updates the value
-and timestamp in place.
-:::
+> [!NOTE]
+> Updating an existing key does not trigger eviction -- it updates the value
+> and timestamp in place.
 
 ## CacheBackend Protocol
 
@@ -156,11 +155,10 @@ The protocol requires four methods:
 | `invalidate` | `(key: str) -> None` | Remove a specific key |
 | `clear` | `() -> None` | Remove all entries |
 
-:::tip
-`CacheBackend` is a PEP 544 `Protocol` -- no inheritance required.
-Any class with matching method signatures satisfies it via structural
-subtyping.
-:::
+> [!TIP]
+> `CacheBackend` is a PEP 544 `Protocol` -- no inheritance required.
+> Any class with matching method signatures satisfies it via structural
+> subtyping.
 
 ## See Also
 

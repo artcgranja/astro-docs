@@ -264,10 +264,9 @@ Metadata produced: `filename`, `extension`, `title`.
 
 Parse PDF files using `pypdf`. Supported extensions: `.pdf`.
 
-:::note
-Requires the `pdf` optional extra: `pip install astro-anchor[pdf]`.
-Raises `IngestionError` if `pypdf` is not installed.
-:::Metadata produced: `filename`, `extension`, `page_count`, `title`, `author`.
+> [!NOTE]
+> Requires the `pdf` optional extra: `pip install astro-anchor[pdf]`.
+> Raises `IngestionError` if `pypdf` is not installed.Metadata produced: `filename`, `extension`, `page_count`, `title`, `author`.
 
 ---
 

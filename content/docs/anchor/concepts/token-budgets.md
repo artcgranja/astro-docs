@@ -108,10 +108,9 @@ Source "retrieval" cap: 2000 tokens
 Total items: 2500 tokens --> ALL DROPPED (exceeds cap)
 ```
 
-:::caution[Drop strategy]
-Use `"drop"` only when your application requires all-or-nothing behavior
-for a source. In most cases, `"truncate"` is the safer choice.
-:::
+> [!CAUTION] Drop strategy
+> Use `"drop"` only when your application requires all-or-nothing behavior
+> for a source. In most cases, `"truncate"` is the safer choice.
 
 ## Reserve Tokens
 
@@ -223,11 +222,10 @@ budget = default_agent_budget(max_tokens=8192)
 | Reserve | 1228 | 15% |
 | Shared pool | -- | 10% |
 
-:::tip[Custom budgets]
-The presets are a starting point. For production workloads, construct
-a `TokenBudget` directly with allocations tuned to your application's
-data distribution.
-:::
+> [!TIP] Custom budgets
+> The presets are a starting point. For production workloads, construct
+> a `TokenBudget` directly with allocations tuned to your application's
+> data distribution.
 
 ## Using Budgets with the Pipeline
 
@@ -273,11 +271,10 @@ print(d.get("budget_overflow_by_source"))
 # e.g. {"retrieval": 3}  -- 3 retrieval items were dropped
 ```
 
-:::note[Overflow vs window overflow]
-Budget overflow happens during per-source cap enforcement (Stage 4a).
-Window overflow happens when total items still exceed `max_tokens` after
-budget filtering (Stage 4b). Both are tracked in diagnostics.
-:::
+> [!NOTE] Overflow vs window overflow
+> Budget overflow happens during per-source cap enforcement (Stage 4a).
+> Window overflow happens when total items still exceed `max_tokens` after
+> budget filtering (Stage 4b). Both are tracked in diagnostics.
 
 ## Source Types
 

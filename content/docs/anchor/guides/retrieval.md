@@ -77,10 +77,9 @@ results = retriever.retrieve(query, top_k=5)
 If the `QueryBundle` already carries a pre-computed `embedding`, the retriever
 uses it directly. Otherwise it calls `embed_fn` on the query text.
 
-:::tip
-Pre-compute the query embedding once and set `query.embedding` if you need
-to share the same embedding across multiple retrievers.
-:::
+> [!TIP]
+> Pre-compute the query embedding once and set `query.embedding` if you need
+> to share the same embedding across multiple retrievers.
 
 ---
 
@@ -88,12 +87,11 @@ to share the same embedding across multiple retrievers.
 
 `SparseRetriever` uses BM25 for term-frequency-based retrieval.
 
-:::caution
-The `rank-bm25` package is required. Install it with:
-```bash
-pip install astro-anchor[bm25]
-```
-:::
+> [!CAUTION]
+> The `rank-bm25` package is required. Install it with:
+> ```bash
+> pip install astro-anchor[bm25]
+> ```
 
 ```python
 from anchor.retrieval import SparseRetriever
@@ -119,11 +117,10 @@ results = retriever.retrieve(query, top_k=5)
 Scores are normalized to `[0, 1]` by dividing by the maximum BM25 score in
 the corpus. Zero-score items are excluded from results.
 
-:::note
-The default tokenizer splits on whitespace and lowercases. For better
-results, provide a custom `tokenize_fn` that handles stemming, stop-word
-removal, or subword tokenization.
-:::
+> [!NOTE]
+> The default tokenizer splits on whitespace and lowercases. For better
+> results, provide a custom `tokenize_fn` that handles stemming, stop-word
+> removal, or subword tokenization.
 
 ---
 
@@ -161,11 +158,10 @@ The smoothing constant `rrf_k` (default 60, from the original RRF paper)
 prevents top-ranked items from dominating excessively. Final scores are
 normalized to `[0, 1]`.
 
-:::tip
-If one retriever fails, `HybridRetriever` skips it and continues with the
-remaining retrievers. It only raises `RetrieverError` when **all**
-sub-retrievers fail.
-:::
+> [!TIP]
+> If one retriever fails, `HybridRetriever` skips it and continues with the
+> remaining retrievers. It only raises `RetrieverError` when **all**
+> sub-retrievers fail.
 
 ---
 
@@ -218,11 +214,10 @@ reranked = reranker.process(items, query)
 | `score_fn` | `Callable[[str, str], float]` | Takes `(query_str, doc_content)` and returns a relevance score. |
 | `top_k` | `int \| None` | Maximum items to return. `None` keeps all items. |
 
-:::note
-For the `Reranker` protocol (used by `RerankerPipeline`), see
-[CrossEncoderReranker](advanced-retrieval.md) in the advanced retrieval
-guide.
-:::
+> [!NOTE]
+> For the `Reranker` protocol (used by `RerankerPipeline`), see
+> [CrossEncoderReranker](advanced-retrieval.md) in the advanced retrieval
+> guide.
 
 ---
 

@@ -265,24 +265,21 @@ class AsyncRetriever(Protocol):
 Use `async_retriever_step()` to add an async retriever to the pipeline,
 and call `pipeline.abuild()` instead of `pipeline.build()`.
 
-:::tip[Protocol Compliance]
-You can verify your class satisfies the protocol at runtime:
-```python
-from anchor import Retriever
-assert isinstance(my_retriever, Retriever)
-```
-:::
+> [!TIP] Protocol Compliance
+> You can verify your class satisfies the protocol at runtime:
+> ```python
+> from anchor import Retriever
+> assert isinstance(my_retriever, Retriever)
+> ```
 
-:::note[No Inheritance Required]
-Unlike abstract base classes, protocols use structural subtyping.
-Your class does not need to inherit from `Retriever` -- it just
-needs a `retrieve` method with the correct signature.
-:::
+> [!NOTE] No Inheritance Required
+> Unlike abstract base classes, protocols use structural subtyping.
+> Your class does not need to inherit from `Retriever` -- it just
+> needs a `retrieve` method with the correct signature.
 
-:::caution[Return ContextItem Objects]
-The `retrieve` method must return `list[ContextItem]`. The pipeline
-expects these specific model objects, not plain dicts or strings.
-:::
+> [!CAUTION] Return ContextItem Objects
+> The `retrieve` method must return `list[ContextItem]`. The pipeline
+> expects these specific model objects, not plain dicts or strings.
 
 ## Next Steps
 

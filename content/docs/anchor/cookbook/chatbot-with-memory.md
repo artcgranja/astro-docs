@@ -193,16 +193,14 @@ window = SlidingWindowMemory(
 )
 ```
 
-:::tip[Choosing a Token Budget]
-Set `conversation_tokens` to roughly 50-60% of your total `max_tokens`
-to leave room for system prompts and retrieval results.
-:::
+> [!TIP] Choosing a Token Budget
+> Set `conversation_tokens` to roughly 50-60% of your total `max_tokens`
+> to leave room for system prompts and retrieval results.
 
-:::caution[Memory is Per-Instance]
-`SlidingWindowMemory` is in-memory only. For persistence across sessions,
-use `JsonFileMemoryStore` as the `persistent_store` or implement a custom
-`MemoryEntryStore`.
-:::
+> [!CAUTION] Memory is Per-Instance
+> `SlidingWindowMemory` is in-memory only. For persistence across sessions,
+> use `JsonFileMemoryStore` as the `persistent_store` or implement a custom
+> `MemoryEntryStore`.
 
 ## Next Steps
 

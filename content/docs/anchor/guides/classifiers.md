@@ -46,10 +46,9 @@ label = classifier.classify(query)
 print(label)  # "code" (matched "function" first, then "bug")
 ```
 
-:::tip
-Put the most specific rules first. Since evaluation stops at the first
-match, ordering matters.
-:::
+> [!TIP]
+> Put the most specific rules first. Since evaluation stops at the first
+> match, ordering matters.
 
 ### CallbackClassifier
 
@@ -99,11 +98,10 @@ label = classifier.classify(query)
 print(label)  # "technical"
 ```
 
-:::caution
-`EmbeddingClassifier.classify()` raises `ValueError` if
-`query.embedding` is `None`. Make sure to compute embeddings before
-classification.
-:::You can supply a custom distance function:
+> [!CAUTION]
+> `EmbeddingClassifier.classify()` raises `ValueError` if
+> `query.embedding` is `None`. Make sure to compute embeddings before
+> classification.You can supply a custom distance function:
 
 ```python
 def dot_product(a: list[float], b: list[float]) -> float:
@@ -161,10 +159,9 @@ pipeline = ContextPipeline(steps=[step])
 | `default`    | `str \| None`             | `None`   | Fallback label when classified label not found |
 | `top_k`      | `int`                     | `10`     | Maximum items to retrieve                      |
 
-:::note
-If the classified label is not in `retrievers` and no `default` is
-configured, a `RetrieverError` is raised.
-:::
+> [!NOTE]
+> If the classified label is not in `retrievers` and no `default` is
+> configured, a `RetrieverError` is raised.
 
 ---
 
@@ -213,8 +210,7 @@ step = classified_retriever_step(
 )
 ```
 
-:::tip
-Combine classifiers with [query transformers](query-transform.md) for
-sophisticated pipelines: classify first, then apply domain-specific
-transformations before retrieval.
-:::
+> [!TIP]
+> Combine classifiers with [query transformers](query-transform.md) for
+> sophisticated pipelines: classify first, then apply domain-specific
+> transformations before retrieval.

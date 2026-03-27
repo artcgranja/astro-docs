@@ -231,18 +231,16 @@ hybrid = HybridRetriever(
 )
 ```
 
-:::tip[Embedding at Query Time]
-When using `DenseRetriever` with an `embed_fn`, you can pass either a
-plain string or a `QueryBundle` with a pre-computed embedding. If you
-pass a string, the retriever calls `embed_fn` automatically.
-:::
+> [!TIP] Embedding at Query Time
+> When using `DenseRetriever` with an `embed_fn`, you can pass either a
+> plain string or a `QueryBundle` with a pre-computed embedding. If you
+> pass a string, the retriever calls `embed_fn` automatically.
 
-:::note[Reranker vs PostProcessor]
-`reranker_step()` expects an object with a `rerank(query, items, top_k)`
-method. `postprocessor_step()` expects `process(items, query)`. Use
-`CrossEncoderReranker` for the reranker protocol, or `ScoreReranker`
-for the postprocessor protocol.
-:::
+> [!NOTE] Reranker vs PostProcessor
+> `reranker_step()` expects an object with a `rerank(query, items, top_k)`
+> method. `postprocessor_step()` expects `process(items, query)`. Use
+> `CrossEncoderReranker` for the reranker protocol, or `ScoreReranker`
+> for the postprocessor protocol.
 
 ## Next Steps
 

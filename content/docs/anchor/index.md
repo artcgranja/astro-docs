@@ -97,10 +97,9 @@ print(result.formatted_output)   # Ready for the Anthropic API
 print(result.diagnostics)        # Token usage, timing, overflow info
 ```
 
-:::tip[Plain strings just work]
-`build()` accepts either a plain `str` or a `QueryBundle` object.
-Plain strings are automatically wrapped in a `QueryBundle` for you.
-:::
+> [!TIP] Plain strings just work
+> `build()` accepts either a plain `str` or a `QueryBundle` object.
+> Plain strings are automatically wrapped in a `QueryBundle` for you.
 
 ---
 
@@ -174,11 +173,10 @@ Three presets are available:
 | `default_rag_budget` | RAG-heavy apps | 25% | 40% | 15% |
 | `default_agent_budget` | Agentic apps | 30% | 25% | 15% |
 
-:::note
-Each budget automatically reserves 15% of tokens for the LLM response.
-Per-source overflow strategies (`"truncate"` or `"drop"`) control what
-happens when a source exceeds its cap.
-:::
+> [!NOTE]
+> Each budget automatically reserves 15% of tokens for the LLM response.
+> Per-source overflow strategies (`"truncate"` or `"drop"`) control what
+> happens when a source exceeds its cap.
 
 ---
 
@@ -204,10 +202,9 @@ def boost_recent(items: list[ContextItem], query: QueryBundle) -> list[ContextIt
 result = pipeline.build("What is context engineering?")
 ```
 
-:::tip
-Use `@pipeline.async_step` for async functions and call `abuild()`
-instead of `build()`.
-:::
+> [!TIP]
+> Use `@pipeline.async_step` for async functions and call `abuild()`
+> instead of `build()`.
 
 ---
 
