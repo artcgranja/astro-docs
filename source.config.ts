@@ -1,5 +1,5 @@
 import { defineDocs, defineConfig } from 'fumadocs-mdx/config';
-import rehypeMermaid from 'rehype-mermaid';
+import { remarkMdxMermaid } from 'fumadocs-core/mdx-plugins';
 
 export const docs = defineDocs({
   dir: 'content/docs',
@@ -7,6 +7,6 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    rehypePlugins: [[rehypeMermaid, { strategy: 'inline-svg' }]],
+    remarkPlugins: [remarkMdxMermaid],
   },
 });
