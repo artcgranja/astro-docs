@@ -1,6 +1,5 @@
 ---
 title: Quickstart
-icon: material/timer-sand
 ---
 
 # Quickstart

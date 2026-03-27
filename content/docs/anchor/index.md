@@ -1,11 +1,7 @@
 ---
 title: anchor
 description: Context engineering toolkit for AI applications
-hide:
-  - toc
 ---
-
-<div class="hero" markdown>
 
 # anchor
 
@@ -21,8 +17,6 @@ and system prompts into a single, token-aware pipeline.
 [![Downloads](https://img.shields.io/pypi/dm/astro-anchor?color=64748b)](https://pypi.org/project/astro-anchor/)
 [![Python](https://img.shields.io/pypi/pyversions/astro-anchor?color=6B8E6B)](https://pypi.org/project/astro-anchor/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748b)](https://github.com/artcgranja/anchor/blob/main/LICENSE)
-
-</div>
 
 ---
 
@@ -40,7 +34,7 @@ Build intelligent context pipelines in minutes.
 
 ## Features
 
-<div class="grid cards" markdown>
+
 
 -   **Hybrid RAG**
 
@@ -120,7 +114,7 @@ Build intelligent context pipelines in minutes.
 
     [Observability guide](guides/observability.md)
 
-</div>
+
 
 ---
 
@@ -283,7 +277,7 @@ instead of `build()`.
 
 ## Next Steps
 
-<div class="grid cards" markdown>
+
 
 -   **Getting Started**
 
@@ -317,4 +311,4 @@ instead of `build()`.
 
     [API docs](api/index.md)
 
-</div>
+

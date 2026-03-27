@@ -10,8 +10,6 @@ guide with working code you can copy into your project.
 
 ---
 
-<div class="grid cards" markdown>
-
 -   **Chatbot with Memory**
 
 ---
@@ -74,5 +72,3 @@ guide with working code you can copy into your project.
     observability, performance tuning, and testing strategies.
 
     [Production Patterns](production-patterns.md)
-
-</div>

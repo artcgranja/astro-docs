@@ -1,6 +1,5 @@
 ---
 title: Getting Started
-icon: material/rocket-launch
 ---
 
 # Getting Started
@@ -8,8 +7,6 @@ icon: material/rocket-launch
 Get up and running with **anchor** in minutes. This section walks you
 through installation, a minimal first example, and a comprehensive tutorial
 covering all the major features.
-
-<div class="grid cards" markdown>
 
 -   **Installation**
 
@@ -37,5 +34,3 @@ covering all the major features.
     formatters, decorators, async, query transforms, and diagnostics.
 
     [Your First Pipeline](first-pipeline.md)
-
-</div>

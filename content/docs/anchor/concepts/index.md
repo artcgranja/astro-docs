@@ -10,8 +10,6 @@ effectively and extend it with confidence. These pages cover the foundational
 ideas, the system architecture, and the contracts that make everything
 pluggable.
 
-<div class="grid cards" markdown>
-
 -   **Context Engineering**
 
 ---
@@ -47,5 +45,3 @@ pluggable.
     keep your context window within model limits.
 
     [Read more](token-budgets.md)
-
-</div>

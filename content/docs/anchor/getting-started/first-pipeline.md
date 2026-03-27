@@ -1,6 +1,5 @@
 ---
 title: Your First Pipeline
-icon: material/school
 ---
 
 # Your First Pipeline
