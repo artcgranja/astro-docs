@@ -47,10 +47,10 @@ for file in $FILES; do
   # !!! note "Title" -> > [!NOTE]
   # !!! warning -> > [!WARNING]
   if grep -qE '^!!! ' "$file" 2>/dev/null; then
-    python3 -c "
+    python3 - "$file" <<'PYEOF'
 import re, sys
 
-with open('$file', 'r') as f:
+with open(sys.argv[1], 'r') as f:
     content = f.read()
 
 def convert_admonition(match):
@@ -88,9 +88,9 @@ def convert_admonition(match):
 pattern = r'^( *)!!! (\w+)(?: \"([^\"]+)\")?\n((?:    .*\n?)*)'
 content = re.sub(pattern, convert_admonition, content, flags=re.MULTILINE)
 
-with open('$file', 'w') as f:
+with open(sys.argv[1], 'w') as f:
     f.write(content)
-"
+PYEOF
     CHANGED=true
   fi
 
@@ -139,21 +139,18 @@ with open('$file', 'w') as f:
   # Pattern: -   **Title**\n\n---\n\n    Description\n\n    [Link](url)
   # Converts to: - **[Title](url)** — Description
   if grep -qE '^-   \*\*' "$file" 2>/dev/null; then
-    python3 -c "
+    python3 - "$file" <<'PYEOF'
 import re, sys
 
-with open('$file', 'r') as f:
+with open(sys.argv[1], 'r') as f:
     content = f.read()
 
 def convert_cards(content):
-    # Match card pattern: -   **Title**\n\n---\n\n    description lines\n\n    [link](url)
     pattern = r'^-   \*\*(.+?)\*\*\n\n---\n\n((?:    .+\n?)*)'
     def replace_card(match):
         title = match.group(1)
         body = match.group(2).strip()
-        # Extract link from body
         link_match = re.search(r'\[([^\]]+)\]\(([^)]+)\)', body)
-        # Remove the link line from description
         desc_lines = []
         for line in body.split('\n'):
             stripped = line.strip()
@@ -165,27 +162,26 @@ def convert_cards(content):
             return f'- **[{title}]({url})** — {desc}\n'
         else:
             return f'- **{title}** — {desc}\n'
-
     return re.sub(pattern, replace_card, content, flags=re.MULTILINE)
 
 content = convert_cards(content)
 
-with open('$file', 'w') as f:
+with open(sys.argv[1], 'w') as f:
     f.write(content)
-"
+PYEOF
     CHANGED=true
   fi
 
   # 12. Convert :::type[title] callouts to GitHub-style > [!TYPE]
   if grep -q ':::' "$file" 2>/dev/null; then
-    python3 -c "
-import re
+    python3 - "$file" <<'PYEOF'
+import re, sys
 type_map = {
     'tip': 'TIP', 'note': 'NOTE', 'warning': 'WARNING',
     'caution': 'CAUTION', 'danger': 'CAUTION', 'important': 'IMPORTANT',
     'info': 'NOTE',
 }
-with open('$file', 'r') as f:
+with open(sys.argv[1], 'r') as f:
     content = f.read()
 def replace_callout(match):
     ct = type_map.get(match.group(1).lower(), 'NOTE')
@@ -197,9 +193,9 @@ def replace_callout(match):
     lines = [f'> {l}' if l.strip() else '>' for l in body.split('\n')]
     return header + '\n' + '\n'.join(lines)
 content = re.sub(r':::(\w+)(?:\[([^\]]*)\])?\n(.*?):::', replace_callout, content, flags=re.DOTALL)
-with open('$file', 'w') as f:
+with open(sys.argv[1], 'w') as f:
     f.write(content)
-"
+PYEOF
     CHANGED=true
   fi
 

@@ -9,9 +9,9 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
-    "fumadocs-core": "latest",
-    "fumadocs-mdx": "latest",
-    "fumadocs-ui": "latest",
+    "fumadocs-core": "^16.7.7",
+    "fumadocs-mdx": "^14.2.11",
+    "fumadocs-ui": "^16.7.7",
     "mermaid": "^11.13.0",
     "next": "^16.0.0",
     "react": "^19.2.0",

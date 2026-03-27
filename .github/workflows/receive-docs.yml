@@ -56,6 +56,11 @@ jobs:
 
           rm -rf _source
 
+      - name: Convert MkDocs syntax
+        run: |
+          chmod +x scripts/convert-mkdocs.sh
+          ./scripts/convert-mkdocs.sh "content/docs/${{ steps.config.outputs.project }}"
+
       - name: Commit and push
         env:
           PROJECT: ${{ steps.config.outputs.project }}
