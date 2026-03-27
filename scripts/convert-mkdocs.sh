@@ -135,6 +135,47 @@ with open('$file', 'w') as f:
     CHANGED=true
   fi
 
+  # 11. Convert MkDocs card list format to inline markdown links
+  # Pattern: -   **Title**\n\n---\n\n    Description\n\n    [Link](url)
+  # Converts to: - **[Title](url)** — Description
+  if grep -qE '^-   \*\*' "$file" 2>/dev/null; then
+    python3 -c "
+import re, sys
+
+with open('$file', 'r') as f:
+    content = f.read()
+
+def convert_cards(content):
+    # Match card pattern: -   **Title**\n\n---\n\n    description lines\n\n    [link](url)
+    pattern = r'^-   \*\*(.+?)\*\*\n\n---\n\n((?:    .+\n?)*)'
+    def replace_card(match):
+        title = match.group(1)
+        body = match.group(2).strip()
+        # Extract link from body
+        link_match = re.search(r'\[([^\]]+)\]\(([^)]+)\)', body)
+        # Remove the link line from description
+        desc_lines = []
+        for line in body.split('\n'):
+            stripped = line.strip()
+            if not re.match(r'^\[.+\]\(.+\)$', stripped):
+                desc_lines.append(stripped)
+        desc = ' '.join(l for l in desc_lines if l)
+        if link_match:
+            url = link_match.group(2)
+            return f'- **[{title}]({url})** — {desc}\n'
+        else:
+            return f'- **{title}** — {desc}\n'
+
+    return re.sub(pattern, replace_card, content, flags=re.MULTILINE)
+
+content = convert_cards(content)
+
+with open('$file', 'w') as f:
+    f.write(content)
+"
+    CHANGED=true
+  fi
+
   if [ "$CHANGED" = true ]; then
     MODIFIED=$((MODIFIED + 1))
     echo "  converted: $file"

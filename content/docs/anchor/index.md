@@ -34,85 +34,21 @@ Build intelligent context pipelines in minutes.
 
 ## Features
 
+- **Hybrid RAG** — Dense embeddings + BM25 sparse retrieval with Reciprocal Rank Fusion. Combine multiple retrieval strategies in a single pipeline for higher recall and precision. [Retrieval guide →](guides/retrieval.md)
 
+- **Smart Memory** — Token-aware sliding window with automatic eviction. Oldest turns are evicted when the conversation exceeds its budget — recent context is never lost. [Memory guide →](guides/memory.md)
 
--   **Hybrid RAG**
+- **Token Budgets** — Priority-ranked assembly fills from highest-priority items down. Per-source allocations let you reserve tokens for system prompts, memory, retrieval, and responses independently. [Token budgets →](concepts/token-budgets.md)
 
----
+- **Provider Agnostic** — Anthropic, OpenAI, or plain text. Format the assembled context for any LLM provider with a single method call. Swap providers without changing your pipeline. [Formatters guide →](guides/formatters.md)
 
-    Dense embeddings + BM25 sparse retrieval with Reciprocal Rank Fusion.
-    Combine multiple retrieval strategies in a single pipeline for higher
-    recall and precision.
+- **Protocol-Based** — Every extension point is defined as a PEP 544 structural protocol. Bring your own retriever, tokenizer, reranker, or memory store — no base classes required. [Protocols →](concepts/protocols.md)
 
-    [Retrieval guide](guides/retrieval.md)
+- **Type-Safe** — All models are frozen Pydantic v2 dataclasses with full `py.typed` support. Catch integration errors at type-check time, not at runtime. [API reference →](api/models.md)
 
--   **Smart Memory**
+- **Agent Framework** — Built-in tool registration, skills, and memory+RAG skills that give your agent long-term recall. Compose agents from the same pipeline primitives. [Agent guide →](guides/agent.md)
 
----
-
-    Token-aware sliding window with automatic eviction. Oldest turns are
-    evicted when the conversation exceeds its budget -- recent context is
-    never lost.
-
-    [Memory guide](guides/memory.md)
-
--   **Token Budgets**
-
----
-
-    Priority-ranked assembly fills from highest-priority items down.
-    Per-source allocations let you reserve tokens for system prompts,
-    memory, retrieval, and responses independently.
-
-    [Token budgets](concepts/token-budgets.md)
-
--   **Provider Agnostic**
-
----
-
-    Anthropic, OpenAI, or plain text. Format the assembled context for any
-    LLM provider with a single method call. Swap providers without changing
-    your pipeline.
-
-    [Formatters guide](guides/formatters.md)
-
--   **Protocol-Based**
-
----
-
-    Every extension point is defined as a PEP 544 structural protocol.
-    Bring your own retriever, tokenizer, reranker, or memory store -- no
-    base classes required.
-
-    [Protocols](concepts/protocols.md)
-
--   **Type-Safe**
-
----
-
-    All models are frozen Pydantic v2 dataclasses with full `py.typed`
-    support. Catch integration errors at type-check time, not at runtime.
-
-    [API reference](api/models.md)
-
--   **Agent Framework**
-
----
-
-    Built-in tool registration, skills, and memory+RAG skills that give
-    your agent long-term recall. Compose agents from the same pipeline
-    primitives.
-
-    [Agent guide](guides/agent.md)
-
--   **Full Observability**
-
----
-
-    Tracing, metrics, cost tracking, and native OTLP export. Know exactly
-    what your pipeline is doing, how long it takes, and what it costs.
-
-    [Observability guide](guides/observability.md)
+- **Full Observability** — Tracing, metrics, cost tracking, and native OTLP export. Know exactly what your pipeline is doing, how long it takes, and what it costs. [Observability guide →](guides/observability.md)
 
 
 
@@ -277,38 +213,8 @@ instead of `build()`.
 
 ## Next Steps
 
-
-
--   **Getting Started**
-
----
-
-    Installation, first pipeline, and all the basics.
-
-    [Get started](getting-started/index.md)
-
--   **Core Concepts**
-
----
-
-    Context engineering, architecture, protocols, and token budgets.
-
-    [Concepts](concepts/index.md)
-
--   **Guides**
-
----
-
-    Pipeline, retrieval, memory, agents, observability, and more.
-
-    [Guides](guides/index.md)
-
--   **API Reference**
-
----
-
-    Full API documentation for every module.
-
-    [API docs](api/index.md)
-
+- **[Getting Started](getting-started/index.md)** — Installation, first pipeline, and all the basics.
+- **[Core Concepts](concepts/index.md)** — Context engineering, architecture, protocols, and token budgets.
+- **[Guides](guides/index.md)** — Pipeline, retrieval, memory, agents, observability, and more.
+- **[API Reference](api/index.md)** — Full API documentation for every module.
 
