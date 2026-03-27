@@ -1,41 +1,92 @@
-name: Receive Docs Update
+name: Receive Docs
 
 on:
   repository_dispatch:
-    types: [sync-anchor-docs]
-
-permissions:
-  contents: write
+    types:
+      - sync-anchor-docs
+      - sync-stick-docs
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout astro-docs
+        uses: actions/checkout@v4
 
-      - name: Clear existing anchor docs
-        run: rm -rf src/content/docs/anchor
-
-      - name: Clone anchor repo
-        run: git clone --depth 1 https://github.com/artcgranja/anchor.git /tmp/anchor
-
-      - name: Copy docs
-        run: cp -r /tmp/anchor/docs/docs/ src/content/docs/anchor/
-
-      - name: Check for changes
-        id: changes
+      - name: Determine source repo and project
+        id: config
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
         run: |
-          git add -A
-          if git diff --staged --quiet; then
-            echo "has_changes=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          case "${EVENT_ACTION}" in
+            sync-anchor-docs)
+              echo "repo=artcgranja/anchor" >> "$GITHUB_OUTPUT"
+              echo "project=anchor" >> "$GITHUB_OUTPUT"
+              echo "docs_dir=docs/docs" >> "$GITHUB_OUTPUT"
+              ;;
+            sync-stick-docs)
+              echo "repo=artcgranja/stick-backend" >> "$GITHUB_OUTPUT"
+              echo "project=stick" >> "$GITHUB_OUTPUT"
+              echo "docs_dir=docs" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "ERROR: Unknown event type: ${EVENT_ACTION}"
+              exit 1
+              ;;
+          esac
+
+      - name: Clone source repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.config.outputs.repo }}
+          path: _source
+          token: ${{ secrets.DOCS_SYNC_TOKEN }}
+
+      - name: Sync content
+        run: |
+          PROJECT="${{ steps.config.outputs.project }}"
+          DOCS_DIR="${{ steps.config.outputs.docs_dir }}"
+          DEST="content/docs/${PROJECT}"
+
+          # Validate source docs exist before destructive operations
+          if [ ! -d "_source/${DOCS_DIR}" ]; then
+            echo "ERROR: Source docs directory '_source/${DOCS_DIR}' not found"
+            exit 1
           fi
 
+          rm -rf "${DEST}"
+          mkdir -p "${DEST}"
+
+          rsync -av --exclude='mkdocs.yml' \
+                    --exclude='overrides/' \
+                    --exclude='includes/' \
+                    --exclude='stylesheets/' \
+                    --exclude='.gitignore' \
+                    "_source/${DOCS_DIR}/" "${DEST}/"
+
+          # Validate content was actually synced
+          if [ -z "$(ls -A "${DEST}")" ]; then
+            echo "ERROR: No files synced to ${DEST}"
+            exit 1
+          fi
+
+          rm -rf _source
+
+      - name: Convert MkDocs syntax
+        run: |
+          chmod +x scripts/convert-mkdocs.sh
+          ./scripts/convert-mkdocs.sh "content/docs/${{ steps.config.outputs.project }}"
+
       - name: Commit and push
-        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          PROJECT: ${{ steps.config.outputs.project }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "docs: sync anchor docs"
-          git push
+          git add content/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: sync ${PROJECT} docs"
+            git push
+          fi

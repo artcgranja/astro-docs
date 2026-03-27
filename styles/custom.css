@@ -1,0 +1,42 @@
+/* Astro Intelligence brand theming for Fumadocs UI v16 */
+
+/* Site is always dark — apply brand tokens to both modes */
+:root, .dark {
+  --color-fd-background: #020810;
+  --color-fd-foreground: #e8ecf0;
+  --color-fd-muted: #0a1420;
+  --color-fd-muted-foreground: #8896a4;
+  --color-fd-popover: #0a1420;
+  --color-fd-popover-foreground: #e8ecf0;
+  --color-fd-card: rgba(255, 255, 255, 0.03);
+  --color-fd-card-foreground: #e8ecf0;
+  --color-fd-border: rgba(255, 255, 255, 0.06);
+  --color-fd-primary: #3b82f6;
+  --color-fd-primary-foreground: #020810;
+  --color-fd-secondary: #0a1420;
+  --color-fd-secondary-foreground: #e8ecf0;
+  --color-fd-accent: rgba(59, 130, 246, 0.15);
+  --color-fd-accent-foreground: #e8ecf0;
+  --color-fd-ring: #3b82f6;
+  --color-fd-overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* Sidebar uses void-light */
+#nd-sidebar {
+  --color-fd-muted: #0a1420;
+  --color-fd-secondary: #0a1420;
+  --color-fd-muted-foreground: #8896a4;
+  background-color: #0a1420;
+}
+
+/* Font families via Tailwind theme override */
+@theme {
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-fira-code), ui-monospace, monospace;
+}
+
+/* Inline code and code blocks — surface background */
+[data-rehype-pretty-code-figure],
+code:not([data-language]) {
+  background: rgba(255, 255, 255, 0.03);
+}

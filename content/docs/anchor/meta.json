@@ -1,0 +1,14 @@
+{
+  "title": "Anchor",
+  "pages": [
+    "index",
+    "getting-started",
+    "concepts",
+    "guides",
+    "cookbook",
+    "api",
+    "faq",
+    "changelog",
+    "contributing"
+  ]
+}

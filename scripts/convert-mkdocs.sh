@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+# convert-mkdocs.sh — Convert MkDocs Material syntax to Fumadocs-compatible markdown
+#
+# Usage: ./scripts/convert-mkdocs.sh [directory]
+#   directory: path to content directory (default: content/docs/anchor)
+#
+# This script is idempotent — safe to run multiple times on the same files.
+
+set -euo pipefail
+
+CONTENT_DIR="${1:-content/docs/anchor}"
+
+if [ ! -d "$CONTENT_DIR" ]; then
+  echo "Error: directory '$CONTENT_DIR' does not exist"
+  exit 1
+fi
+
+# Cross-platform sed: macOS uses -i '', GNU/Linux uses -i
+SED_INPLACE=(sed -i)
+if [[ "$(uname)" == "Darwin" ]]; then
+  SED_INPLACE=("${SED_INPLACE[@]}")
+fi
+
+echo "Converting MkDocs syntax in $CONTENT_DIR ..."
+
+MODIFIED=0
+
+# Use find with -print0 to handle filenames with spaces
+while IFS= read -r -d '' file; do
+  CHANGED=false
+
+  # 1. Remove icon shortcodes (:material-xxx: and :octicons-xxx:)
+  if grep -qE ':(material|octicons)-[a-z0-9-]+:' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" -E 's/:(material|octicons)-[a-z0-9-]+://g' "$file"
+    CHANGED=true
+  fi
+
+  # 2. Remove MkDocs icon frontmatter (icon: material/xxx)
+  if grep -q '^icon: material/' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" '/^icon: material\//d' "$file"
+    CHANGED=true
+  fi
+
+  # 3. Remove MkDocs hide frontmatter (hide: - toc, hide: - navigation)
+  # Removes "hide:" line and subsequent "  - toc" / "  - navigation" lines
+  if grep -q '^hide:' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" '/^hide:$/,/^[^ ]/{/^hide:$/d; /^  - /d;}' "$file"
+    CHANGED=true
+  fi
+
+  # 4. Convert admonitions (!!! type "title") to GitHub-style callouts
+  # !!! note "Title" -> > [!NOTE]
+  # !!! warning -> > [!WARNING]
+  if grep -qE '^!!! ' "$file" 2>/dev/null; then
+    python3 - "$file" <<'PYEOF'
+import re, sys
+
+with open(sys.argv[1], 'r') as f:
+    content = f.read()
+
+def convert_admonition(match):
+    indent = match.group(1)
+    adm_type = match.group(2).upper()
+    title = match.group(3)
+    body = match.group(4)
+
+    # Map MkDocs types to GitHub callout types
+    type_map = {
+        'NOTE': 'NOTE', 'INFO': 'NOTE', 'ABSTRACT': 'NOTE',
+        'TIP': 'TIP', 'HINT': 'TIP',
+        'WARNING': 'WARNING', 'CAUTION': 'CAUTION',
+        'DANGER': 'CAUTION', 'FAILURE': 'CAUTION',
+        'BUG': 'CAUTION', 'EXAMPLE': 'NOTE',
+        'QUESTION': 'NOTE', 'QUOTE': 'NOTE',
+    }
+    callout_type = type_map.get(adm_type, 'NOTE')
+
+    header = f'> [!{callout_type}]'
+    if title:
+        header += f' {title}'
+
+    # Convert indented body to blockquote
+    lines = body.rstrip().split('\n')
+    quoted = []
+    for line in lines:
+        # Remove 4 spaces of indentation
+        stripped = line[4:] if line.startswith('    ') else line
+        quoted.append(f'> {stripped}' if stripped.strip() else '>')
+
+    return header + '\n' + '\n'.join(quoted)
+
+# Match admonition blocks: !!! type optional-title, then indented block
+pattern = r'^( *)!!! (\w+)(?: \"([^\"]+)\")?\n((?:    .*\n?)*)'
+content = re.sub(pattern, convert_admonition, content, flags=re.MULTILINE)
+
+with open(sys.argv[1], 'w') as f:
+    f.write(content)
+PYEOF
+    CHANGED=true
+  fi
+
+  # 5. Remove <div class="grid cards" markdown> and </div> wrappers
+  if grep -q '<div class="grid cards"' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" '/<div class="grid cards"/d' "$file"
+    CHANGED=true
+  fi
+
+  # 6. Remove <div class="hero" markdown> and matching </div>
+  if grep -q '<div class="hero"' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" '/<div class="hero"/d' "$file"
+    CHANGED=true
+  fi
+
+  # 7. Remove closing </div> that were wrapping grid/hero blocks
+  # Only remove standalone </div> lines (no other content)
+  if grep -qE '^\s*</div>\s*$' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" '/^[[:space:]]*<\/div>[[:space:]]*$/d' "$file"
+    CHANGED=true
+  fi
+
+  # 8. Remove markdown attribute from remaining divs
+  if grep -q ' markdown>' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" 's/ markdown>/>/g' "$file"
+    CHANGED=true
+  fi
+  if grep -q ' markdown=' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" 's/ markdown="[^"]*"//g' "$file"
+    CHANGED=true
+  fi
+
+  # 9. Remove {: .class } attribute syntax
+  if grep -qE '\{: *\.' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" -E 's/\{: *\.[^}]*\}//g' "$file"
+    CHANGED=true
+  fi
+
+  # 10. Convert MkDocs tab syntax (=== "Tab") to heading sections
+  if grep -q '=== "' "$file" 2>/dev/null; then
+    "${SED_INPLACE[@]}" -E 's/^=== "(.+)"/#### \1/' "$file"
+    CHANGED=true
+  fi
+
+  # 11. Convert MkDocs card list format to inline markdown links
+  # Pattern: -   **Title**\n\n---\n\n    Description\n\n    [Link](url)
+  # Converts to: - **[Title](url)** — Description
+  if grep -qE '^-   \*\*' "$file" 2>/dev/null; then
+    python3 - "$file" <<'PYEOF'
+import re, sys
+
+with open(sys.argv[1], 'r') as f:
+    content = f.read()
+
+def convert_cards(content):
+    pattern = r'^-   \*\*(.+?)\*\*\n\n---\n\n((?:    .+\n?)*)'
+    def replace_card(match):
+        title = match.group(1)
+        body = match.group(2).strip()
+        link_match = re.search(r'\[([^\]]+)\]\(([^)]+)\)', body)
+        desc_lines = []
+        for line in body.split('\n'):
+            stripped = line.strip()
+            if not re.match(r'^\[.+\]\(.+\)$', stripped):
+                desc_lines.append(stripped)
+        desc = ' '.join(l for l in desc_lines if l)
+        if link_match:
+            url = link_match.group(2)
+            return f'- **[{title}]({url})** — {desc}\n'
+        else:
+            return f'- **{title}** — {desc}\n'
+    return re.sub(pattern, replace_card, content, flags=re.MULTILINE)
+
+content = convert_cards(content)
+
+with open(sys.argv[1], 'w') as f:
+    f.write(content)
+PYEOF
+    CHANGED=true
+  fi
+
+  # 12. Convert :::type[title] callouts to GitHub-style > [!TYPE]
+  if grep -q ':::' "$file" 2>/dev/null; then
+    python3 - "$file" <<'PYEOF'
+import re, sys
+type_map = {
+    'tip': 'TIP', 'note': 'NOTE', 'warning': 'WARNING',
+    'caution': 'CAUTION', 'danger': 'CAUTION', 'important': 'IMPORTANT',
+    'info': 'NOTE',
+}
+with open(sys.argv[1], 'r') as f:
+    content = f.read()
+def replace_callout(match):
+    ct = type_map.get(match.group(1).lower(), 'NOTE')
+    title = match.group(2) or ''
+    body = match.group(3).strip()
+    header = f'> [!{ct}]'
+    if title:
+        header += f' {title}'
+    lines = [f'> {l}' if l.strip() else '>' for l in body.split('\n')]
+    return header + '\n' + '\n'.join(lines)
+content = re.sub(r':::(\w+)(?:\[([^\]]*)\])?\n(.*?):::', replace_callout, content, flags=re.DOTALL)
+with open(sys.argv[1], 'w') as f:
+    f.write(content)
+PYEOF
+    CHANGED=true
+  fi
+
+  if [ "$CHANGED" = true ]; then
+    MODIFIED=$((MODIFIED + 1))
+    echo "  converted: $file"
+  fi
+done < <(find "$CONTENT_DIR" \( -name '*.md' -o -name '*.mdx' \) -print0 | sort -z)
+
+echo "Done. $MODIFIED file(s) modified."
