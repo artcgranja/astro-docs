@@ -3,10 +3,10 @@ import { renderMermaidSVG } from 'beautiful-mermaid';
 
 export async function Mermaid({ chart }: { chart: string }) {
   try {
-    // renderMermaidSVG produces sanitized SVG from mermaid DSL — safe for injection
+    // Use actual hex colors — CSS variables don't resolve at build time
     let svg = renderMermaidSVG(chart, {
-      bg: 'var(--color-fd-background)',
-      fg: 'var(--color-fd-foreground)',
+      bg: '#020810',
+      fg: '#e8ecf0',
       interactive: true,
       transparent: true,
     });

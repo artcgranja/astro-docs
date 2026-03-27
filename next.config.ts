@@ -9,6 +9,9 @@ const config = {
       { hostname: 'img.shields.io' },
       { hostname: 'raw.githubusercontent.com' },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment' as const,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 
